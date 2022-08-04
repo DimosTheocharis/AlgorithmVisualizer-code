@@ -1,0 +1,105 @@
+class Node {
+    constructor(row, column, status) {
+        this.reset(row, column, status);
+    }
+
+    reset(row, column, status) {
+        this._row = row;
+        this._column = column;
+        this._status = status; //unblocked, blocked, source, destination etc
+        this._valueG = 10 ** 6; //distance of this node from the source
+        this._valueH = 10 ** 6; //estimated distance of this node from the destination
+        this._valueF = this._valueG + this._valueH;
+        this._parent = null;
+        this._height = 0;
+        this._leftChild = null;
+        this._rightChild = null;
+        this._value = this._row * 100 + this._column;
+    }
+
+    setRow(row) {
+        this._row = row;
+    }
+
+    setColumn(column) {
+        this._column = column;
+    }
+
+    setStatus(status) {
+        this._status = status;
+    }
+
+    setValueG(valueG) {
+        this._valueG = valueG;
+    }
+
+    setValueH(valueH) {
+        this._valueH = valueH;
+    }
+
+    setValueF(valueF) {
+        this._valueF = valueF;
+    }
+
+    setParent(node) {
+        this._parent = node;
+    }
+
+    setHeight(height) {
+        this._height = height;
+    }
+    
+    setLeftChild(node) {
+        this._leftChild = node;
+    }
+
+    setRightChild(node) {
+        this._rightChild = node;
+    }
+
+    getRow() {
+        return this._row;
+    }
+
+    getColumn() {
+        return this._column;
+    }
+
+    getStatus() {
+        return this._status;
+    }
+
+    getValueG() {
+        return this._valueG;
+    }
+
+    getValueH() {
+        return this._valueH;
+    }
+
+    getValueF() {
+        return this._valueF;
+    }
+
+    getParent() {
+        return this._parent;
+    }
+
+    getHeight() {
+        return this._height;
+    }
+
+    getLeftChild() {
+        return this._leftChild;
+    }
+
+    getRightChild() {
+        return this._rightChild;
+    }
+
+    getValue() {
+        return this._value;
+    }
+}
+
+export default Node;

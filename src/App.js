@@ -1,25 +1,52 @@
-import logo from './logo.svg';
+import React, { useState, createContext, useRef } from 'react';
+import Node from './Data Structures/Node';
 import './App.css';
 
+//screens
+import AsteriskPathFinding from './Screens/AsteriskPathFinding/AsteriskPathFinding';
+
+const rows = 20;
+const columns = 20;
+
+export const AppContext = createContext(); //create a context to easily pass values to child elements
+
 function App() {
+  const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
+  const [grid, setGrid] = useState(null);  
+  let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
+  //unbegan if it has not started yet
+  //pending if algorithm is currently running
+  //finished if either algorithm either has normally ended, or manually stopped
+
+  const createGrid = () => {
+    //gets called only at the first render of the app, and creates a default grid with blocks that are unblocked
+    let startGrid = [];
+    let i,j,row;
+    for (i = 0; i < rows; i++) {
+      row = [];
+      for (j = 0; j < columns; j++) {
+        row.push(new Node(i, j, "unblocked"));
+      }
+      startGrid.push(row);
+    }
+    setGrid(startGrid);
+  }
+
+
+  const getStatus = (row, column) => {
+    if (grid === null) return "unblocked";
+    return grid[row][column].getStatus();
+  }
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContext.Provider value={{rows, columns, createGrid, getStatus, grid, setGrid}}>
+      <AsteriskPathFinding/>
+    </AppContext.Provider>
   );
 }
 
-export default App;
+export default App;  
+
+

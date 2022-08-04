@@ -1,0 +1,41 @@
+.blocked {
+    background-color: black;
+}
+
+.container {
+    border: 1px solid rgb(0,0,50);
+    cursor: pointer;
+    position: relative;
+}
+
+.destination {
+    background-color: rgb(0,0,200);
+}
+
+.evaluated {
+    background-color: red;
+}
+
+.evaluating {
+    background-color: rgb(0,255,0);
+}
+
+.path {
+    background-color: purple;
+}
+
+.source {
+    background-color: rgb(255,127,0);
+}
+
+.unblocked {
+    background-color: white;
+}
+
+.valueF {
+    font-size: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+}
