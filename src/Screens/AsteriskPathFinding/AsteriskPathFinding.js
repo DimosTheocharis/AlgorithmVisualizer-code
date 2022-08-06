@@ -3,6 +3,7 @@ import PriorityQueue from '../../Data Structures/PriorityQueue';
 import AVL from '../../Data Structures/AVL';
 import Block from '../../Components/Block/Block';
 import { AppContext } from '../../App';
+import { IoSettingsOutline } from "react-icons/io5";
 import styles from './AsteriskPathFinding.module.css';
 
 
@@ -53,13 +54,14 @@ function AsteriskPathFinding() {
   const getBlocks = () => {
     //create the grid. That is, 20x20 blocks
     const blocks = [];
-    let valueF;
+    let valueF, valueG;
     let i,j;
     for (i = 0; i < rows; i++) {
       for (j = 0; j < columns; j++) {
         valueF = grid === null ? null : grid[i][j].getValueF();
+        valueG = grid === null ? null : grid[i][j].getValueG();
         blocks.push(
-          <Block key={i * columns + j} handleClickBlock={handleClickBlock} status={getStatus(i, j)} row={i} column={j} valueF={valueF === 2000000 ? "20m" : valueF}/>
+          <Block key={i * columns + j} handleClickBlock={handleClickBlock} status={getStatus(i, j)} row={i} column={j} valueF={valueF === 2000000 ? "2m" : valueF} valueG={valueG === 1000000 ? "1m" : valueG}/>
         )
       }
     }
@@ -277,7 +279,6 @@ function AsteriskPathFinding() {
       
       if (algorithmState.current === "paused") {
         resolvedValue = await pause();
-        console.log(resolvedValue);
       }
       
       resolvedValue = await sleep(animationDuration);
@@ -287,6 +288,9 @@ function AsteriskPathFinding() {
 
   return (
       <div className={styles.container}>
+        <div className={styles.settings}>
+          <IoSettingsOutline className={styles.settingsIcon}/>
+        </div>
         <div className={styles.componentsContainer}>
 
           <div className={styles.component}>
@@ -322,7 +326,6 @@ function AsteriskPathFinding() {
         </div>
 
         <div className={styles.functionalityContainer}>
-          {console.log(`Algorithm state is ${algorithmState.current} and disabled is ${disabled}`)}
           <button onClick={handleOperationButton} className={`${styles.button} ${(algorithmState.current === "finished" || algorithmState.current === "paused") ? `${styles.disabled}` : null}`} disabled={algorithmState.current === "finished" || algorithmState.current === "paused"}>{algorithmState.current === "pending" ? "Stop" : "Start"}</button>
           <button  onClick={handlePauseButton} className={`${styles.button} ${algorithmState.current === "unbegun" || algorithmState.current === "finished" ? `${styles.disabled}` : null}`} disabled={algorithmState.current === "unbegun" || algorithmState.current === "finished"}>{algorithmState.current === "paused" ? "Resume" : "Pause"}</button>
           <div className='sliderContainer'>

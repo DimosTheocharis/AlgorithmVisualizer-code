@@ -45,6 +45,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
 .destination {
@@ -88,6 +89,24 @@
     background-color: purple;
 }
 
+.settings {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+.settingsIcon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: all 700ms;
+}
+
+.settingsIcon:hover {
+    transform: rotateZ(-90deg);
+}
+
+
 .slider {
     height: 15px;
     width: 200px;
@@ -130,4 +149,13 @@
 
 .source {
     background-color: rgb(255,127,0);
+}
+
+@keyframes rotateZ {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(90deg);
+    }
 }

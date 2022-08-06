@@ -35,7 +35,15 @@
 .valueF {
     font-size: 10px;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0px;
+    left: 3px;
+    color: white;
+}
+
+.valueG {
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    right: 3px;
     color: white;
 }
