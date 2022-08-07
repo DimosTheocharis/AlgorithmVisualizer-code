@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import PriorityQueue from '../../Data Structures/PriorityQueue';
 import AVL from '../../Data Structures/AVL';
 import Block from '../../Components/Block/Block';
+import Settings from '../../Components/Settings/Settings';
 import { AppContext } from '../../App';
 import { IoSettingsOutline } from "react-icons/io5";
 import styles from './AsteriskPathFinding.module.css';
@@ -14,6 +15,10 @@ function AsteriskPathFinding() {
   const [destination, setDestination] = useState(null);
   const [animationDuration, setAnimationDuration] = useState(0);
   const [disabled, setDisabled] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showValueG, setShowValueG] = useState(false);
+  const [showValueH, setShowValueH] = useState(false);
+  const [showValueF, setShowValueF] = useState(false);
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
   //pending if algorithm is currently running
@@ -54,14 +59,26 @@ function AsteriskPathFinding() {
   const getBlocks = () => {
     //create the grid. That is, 20x20 blocks
     const blocks = [];
-    let valueF, valueG;
+    let valueG, valueF, valueH;
     let i,j;
     for (i = 0; i < rows; i++) {
       for (j = 0; j < columns; j++) {
-        valueF = grid === null ? null : grid[i][j].getValueF();
         valueG = grid === null ? null : grid[i][j].getValueG();
+        valueH = grid === null ? null : grid[i][j].getValueH();
+        valueF = grid === null ? null : grid[i][j].getValueF();
         blocks.push(
-          <Block key={i * columns + j} handleClickBlock={handleClickBlock} status={getStatus(i, j)} row={i} column={j} valueF={valueF === 2000000 ? "2m" : valueF} valueG={valueG === 1000000 ? "1m" : valueG}/>
+          <Block 
+            key={i * columns + j} 
+            handleClickBlock={handleClickBlock} 
+            status={getStatus(i, j)} 
+            row={i} column={j} 
+            valueG={valueG === 1000000 ? "1m" : valueG} 
+            valueH={valueH === 1000000 ? "1m" : valueH} 
+            valueF={valueF === 2000000 ? "2m" : valueF}
+            showValueG={showValueG}
+            showValueH={showValueH}
+            showValueF={showValueF}
+          />
         )
       }
     }
@@ -139,7 +156,6 @@ function AsteriskPathFinding() {
 
   const handleSlider = (e) => {
     setAnimationDuration(e.target.value);
-    console.log("hi");
   }
 
 
@@ -211,6 +227,23 @@ function AsteriskPathFinding() {
       }, duration)
     })
   }
+
+  const toggleSettings = () => {
+    setShowSettings(prev => !prev);
+  }
+
+  const toggleValueG = () => {
+    setShowValueG(prev => !prev);
+  }
+
+  const toggleValueH = () => {
+    setShowValueH(prev => !prev);
+  }
+
+  const toggleValueF = () => {
+    setShowValueF(prev => !prev);
+  }
+
 
   const visualizePath = async (source, destination) => {
     let current, parent, resolvedValue;
@@ -286,11 +319,19 @@ function AsteriskPathFinding() {
     }
   }
 
+  //object that holds the information about the settings section of the AsteriskPathFinding screen
+  const settings = [
+    {title: "Show g-value", toggleFunction: toggleValueG, enabled: showValueG},
+    {title: "Show h-value", toggleFunction: toggleValueH, enabled: showValueH},
+    {title: "Show f-value", toggleFunction: toggleValueF, enabled: showValueF}
+  ]
+
   return (
       <div className={styles.container}>
         <div className={styles.settings}>
-          <IoSettingsOutline className={styles.settingsIcon}/>
+          <IoSettingsOutline className={styles.settingsIcon} onClick={toggleSettings}/>
         </div>
+        <Settings showSettings={showSettings} settings={settings}/>
         <div className={styles.componentsContainer}>
 
           <div className={styles.component}>

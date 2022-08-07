@@ -1,0 +1,50 @@
+.bar {
+    width: 45px;
+    height: 20px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.barEnabled {
+    background-color: rgb(0,240,255);
+}
+
+.barDisabled {
+    background-color: grey;
+}
+
+.container {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.eye {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.4s;
+}
+
+.eyeEnabled {
+    background-color: black;
+    right: 5px;
+}
+
+.eyeDisabled {
+    background-color: white;
+    left: 5px;
+}
+
+.title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+}

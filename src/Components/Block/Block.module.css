@@ -32,11 +32,11 @@
     background-color: white;
 }
 
-.valueF {
+.valueF{
     font-size: 10px;
     position: absolute;
-    top: 0px;
-    left: 3px;
+    bottom: 0px;
+    left: calc(50% - 6px);
     color: white;
 }
 
@@ -44,6 +44,15 @@
     font-size: 10px;
     position: absolute;
     top: 0px;
+    left: 3px;
+    color: white;
+}
+
+.valueH {
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
     right: 3px;
     color: white;
 }
+

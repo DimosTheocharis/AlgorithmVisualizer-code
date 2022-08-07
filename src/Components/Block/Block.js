@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 
 import BlockCSS from './Block.module.css';
 
-function Block({handleClickBlock, status, row, column, valueF, valueG}) {
+function Block({handleClickBlock, status, row, column, valueG, valueH, valueF, showValueG, showValueH, showValueF}) {
 
     const handleClick = () => {
         handleClickBlock(row, column);
@@ -10,8 +10,9 @@ function Block({handleClickBlock, status, row, column, valueF, valueG}) {
     
     return (
         <div className={`${BlockCSS.container} ${BlockCSS[status]}`} onClick={handleClick}>
-            <p className={BlockCSS.valueF}>{valueF}</p>
-            <p className={BlockCSS.valueG}>{valueG}</p>
+            {showValueG && <p className={BlockCSS.valueG}>{valueG}</p>}
+            {showValueH && <p className={BlockCSS.valueH}>{valueH}</p>}
+            {showValueF && <p className={BlockCSS.valueF}>{valueF}</p>}
         </div>
     )
 }
