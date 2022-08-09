@@ -10,6 +10,8 @@
 .button {
     width: 50px;
     height: 30px;
+    cursor: pointer;
+    background-color: rgb(200,200,180);
 }
 
 .component {
@@ -28,6 +30,7 @@
 
 .componentTitle {
     font-size: 18px;
+    color: rgb(255,235,215);
 }
 
 .componentsContainer {
@@ -46,6 +49,8 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    background-color: rgb(75,85,230);
+    background-image: linear-gradient(to right, rgb(0,20,40), rgb(0,10,30));
 }
 
 .destination {
@@ -55,14 +60,15 @@
 .disabled {
     background-color: rgb(100,100,100);
     color: white;
+    pointer-events: none;
 }
 
 .evaluated {
-    background-color: red;
+    background-color: rgb(100,0,0);
 }
 
 .evaluating {
-    background-color: rgb(0,255,0);
+    background-color: rgb(0,100,0);
 }
 
 .functionalityContainer {
@@ -78,8 +84,7 @@
 .grid {
     width: 70%;
     height: 70%;
-    background-color: white;
-    border: 3px solid rgb(0,0,50);
+    border: 5px solid black;
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     grid-template-rows: repeat(20, 1fr);
@@ -87,7 +92,9 @@
 
 .path {
     background-color: purple;
+    background-color: rgb(80,0,80);
 }
+
 
 .settings {
     position: absolute;
@@ -147,8 +154,28 @@
     cursor: pointer;
 }
 
+.sliderText {
+    color: rgb(255,235,215);
+}
+
 .source {
     background-color: rgb(255,127,0);
+}
+
+.start {
+    background-color: rgb(0,200,0);
+}
+
+.start:hover {
+    background-color: rgb(0,175,0);
+}
+
+.stop {
+    background-color: rgb(200,0,0);
+}
+
+.stop:hover {
+    background-color: rgb(175,0,0);
 }
 
 @keyframes rotateZ {

@@ -3,6 +3,7 @@ import PriorityQueue from '../../Data Structures/PriorityQueue';
 import AVL from '../../Data Structures/AVL';
 import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
+import Timer from '../../Components/Timer/Timer';
 import { AppContext } from '../../App';
 import { IoSettingsOutline } from "react-icons/io5";
 import styles from './AsteriskPathFinding.module.css';
@@ -19,6 +20,7 @@ function AsteriskPathFinding() {
   const [showValueG, setShowValueG] = useState(false);
   const [showValueH, setShowValueH] = useState(false);
   const [showValueF, setShowValueF] = useState(false);
+  const [duration, setDuration] = useState(0); //the running time of the algorithm
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
   //pending if algorithm is currently running
@@ -326,12 +328,16 @@ function AsteriskPathFinding() {
     {title: "Show f-value", toggleFunction: toggleValueF, enabled: showValueF}
   ]
 
+  //determine the color of the operator button (start/stop button) here to avoid confusion at the the render block
+  const operatorButtonClassName = algorithmState.current === "pending" ? "stop" : "start";
+
   return (
       <div className={styles.container}>
         <div className={styles.settings}>
           <IoSettingsOutline className={styles.settingsIcon} onClick={toggleSettings}/>
         </div>
         <Settings showSettings={showSettings} settings={settings}/>
+        <Timer duration={duration}/>
         <div className={styles.componentsContainer}>
 
           <div className={styles.component}>
@@ -367,11 +373,17 @@ function AsteriskPathFinding() {
         </div>
 
         <div className={styles.functionalityContainer}>
-          <button onClick={handleOperationButton} className={`${styles.button} ${(algorithmState.current === "finished" || algorithmState.current === "paused") ? `${styles.disabled}` : null}`} disabled={algorithmState.current === "finished" || algorithmState.current === "paused"}>{algorithmState.current === "pending" ? "Stop" : "Start"}</button>
+          <button 
+            onClick={handleOperationButton} 
+            className={`${styles.button} ${(algorithmState.current === "finished" || algorithmState.current === "paused") ? `${styles.disabled}` : `${styles[operatorButtonClassName]}`}`} 
+            disabled={algorithmState.current === "finished" || algorithmState.current === "paused"}
+          >
+            {algorithmState.current === "pending" ? "Stop" : "Start"}
+          </button>
           <button  onClick={handlePauseButton} className={`${styles.button} ${algorithmState.current === "unbegun" || algorithmState.current === "finished" ? `${styles.disabled}` : null}`} disabled={algorithmState.current === "unbegun" || algorithmState.current === "finished"}>{algorithmState.current === "paused" ? "Resume" : "Pause"}</button>
           <div className='sliderContainer'>
             <input type="range" min={0} max={5000} value={animationDuration} className={`${styles.slider} ${algorithmState.current !== "unbegun" && algorithmState.current !== "finished" ? `${styles.sliderDisabled}` : `${styles.sliderEnabled}`}`} onChange={handleSlider} disabled={algorithmState.current !== "unbegun" && algorithmState.current !== "finished"}/>
-            <p>Animation duration: {animationDuration} milliseconds</p>
+            <p className={styles.sliderText}>Animation duration: {animationDuration} milliseconds</p>
           </div>
           <button onClick={handleResetButton} className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} disabled={disabled}>Reset</button>
           <button onClick={handleClearButton} className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} disabled={disabled}>Clear</button>

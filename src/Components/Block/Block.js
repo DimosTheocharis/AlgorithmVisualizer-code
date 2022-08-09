@@ -10,9 +10,9 @@ function Block({handleClickBlock, status, row, column, valueG, valueH, valueF, s
     
     return (
         <div className={`${BlockCSS.container} ${BlockCSS[status]}`} onClick={handleClick}>
-            {showValueG && <p className={BlockCSS.valueG}>{valueG}</p>}
-            {showValueH && <p className={BlockCSS.valueH}>{valueH}</p>}
-            {showValueF && <p className={BlockCSS.valueF}>{valueF}</p>}
+            {(showValueG && status !== "unblocked") && <p className={BlockCSS.valueG}>{valueG}</p>}
+            {(showValueH && status !== "unblocked") && <p className={BlockCSS.valueH}>{valueH}</p>}
+            {(showValueF && status !== "unblocked") && <p className={BlockCSS.valueF}>{valueF}</p>}
         </div>
     )
 }
