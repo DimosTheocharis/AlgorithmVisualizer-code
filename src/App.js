@@ -4,6 +4,7 @@ import './App.css';
 
 //screens
 import AsteriskPathFinding from './Screens/AsteriskPathFinding/AsteriskPathFinding';
+import Dijkstra from './Screens/Dijkstra/Dijkstra';
 
 const rows = 20;
 const columns = 20;
@@ -11,7 +12,6 @@ const columns = 20;
 export const AppContext = createContext(); //create a context to easily pass values to child elements
 
 function App() {
-  const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
   const [grid, setGrid] = useState(null);  
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet

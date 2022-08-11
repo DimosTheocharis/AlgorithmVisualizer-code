@@ -12,6 +12,12 @@
     height: 30px;
     cursor: pointer;
     background-color: rgb(200,200,180);
+    background-color: #281400;
+    color: rgb(230,230,200);
+}
+
+.button:hover {
+    background-color: rgb(30,15,0);
 }
 
 .component {
@@ -30,7 +36,7 @@
 
 .componentTitle {
     font-size: 18px;
-    color: rgb(255,235,215);
+    color: rgb(230,230,200);
 }
 
 .componentsContainer {
@@ -59,7 +65,7 @@
 
 .disabled {
     background-color: rgb(100,100,100);
-    color: white;
+    color: rgb(230,230,200);
     pointer-events: none;
 }
 
@@ -90,6 +96,7 @@
     grid-template-rows: repeat(20, 1fr);
 }
 
+
 .path {
     background-color: purple;
     background-color: rgb(80,0,80);
@@ -107,6 +114,7 @@
     height: 25px;
     cursor: pointer;
     transition: all 700ms;
+    color: white;
 }
 
 .settingsIcon:hover {
@@ -155,7 +163,7 @@
 }
 
 .sliderText {
-    color: rgb(255,235,215);
+    color: rgb(230,230,200);
 }
 
 .source {

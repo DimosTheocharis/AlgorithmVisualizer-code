@@ -3,7 +3,6 @@
 }
 
 .container {
-    border: 1px solid rgb(0,0,50);
     border: 1px solid black;
     cursor: pointer;
     position: relative;
@@ -35,8 +34,8 @@
     background-color: rgb(230,225,75, 0.9);
     background-color: white;
     background-color: rgb(200,200,180);
-    background-color: #002E5B;
     background-color: #281400;
+    background-color: #002E5B;
 }
 
 

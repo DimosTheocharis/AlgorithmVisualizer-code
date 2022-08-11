@@ -21,6 +21,7 @@ function AsteriskPathFinding() {
   const [showValueH, setShowValueH] = useState(false);
   const [showValueF, setShowValueF] = useState(false);
   const [duration, setDuration] = useState(0); //the running time of the algorithm
+  let durationInterval = useRef(null);
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
   //pending if algorithm is currently running
@@ -129,12 +130,18 @@ function AsteriskPathFinding() {
     //if algorithm is not running, then run.
     if (algorithmState.current === "unbegun") {
       if (source !== null && destination !== null) {
+        //activate the timer
+        durationInterval.current = setInterval(() => {
+          setDuration(prev => prev + 1000);
+        }, 1000);
         algorithmState.current = "pending";
         setDisabled(true);
         AsteriskPathFinding(source, destination);
       }
       //if algorithm is running, stop it
     } else if (algorithmState.current === "pending") {
+      clearInterval(durationInterval.current);
+      durationInterval.current = null;
       algorithmState.current = "finished";
       setDisabled(false);
     } 
@@ -269,6 +276,8 @@ function AsteriskPathFinding() {
     if (algorithmState.current === "pending") {
       changes.push({row: current.getRow(), column: current.getColumn(), status: "source"});
       performGridChanges(changes);
+      clearInterval(durationInterval.current);
+      durationInterval.current = null;
       algorithmState.current = "finished";
       setDisabled(false);
     }
