@@ -1,5 +1,4 @@
 import React, { useState, createContext, useRef } from 'react';
-import Node from './Data Structures/Node';
 import './App.css';
 
 //screens
@@ -13,23 +12,39 @@ export const AppContext = createContext(); //create a context to easily pass val
 
 function App() {
   const [grid, setGrid] = useState(null);  
+  const [animationDuration, setAnimationDuration] = useState(0);
+  const [disabled, setDisabled] = useState(false);
+  let durationInterval = useRef(null);
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
   //pending if algorithm is currently running
   //finished if either algorithm either has normally ended, or manually stopped
 
-  const createGrid = () => {
-    //gets called only at the first render of the app, and creates a default grid with blocks that are unblocked
-    let startGrid = [];
-    let i,j,row;
-    for (i = 0; i < rows; i++) {
-      row = [];
-      for (j = 0; j < columns; j++) {
-        row.push(new Node(i, j, "unblocked"));
+  const calculateDistance = (source, destination) => {
+    const verticalDistance = Math.abs(destination.getRow() - source.getRow());
+    const horizontalDistance = Math.abs(destination.getColumn() - source.getColumn());
+    const distance = min(verticalDistance, horizontalDistance) * 14 + Math.abs(verticalDistance - horizontalDistance) * 10;
+    return distance;
+  }
+
+
+  const computeNeighbours = (node) => {
+    let i, j, neighbor, row, column;
+    const neighbours = [];
+    for (i = -1; i <= 1; i++) {
+      for (j = -1; j <= 1; j++) {
+        if (i === 0 && j === 0) {
+          continue;
+        }
+        row = node.getRow();
+        column = node.getColumn();
+        if ((0 <= row + i && row + i < rows) && (0 <= column + j && column + j < columns)) {
+          neighbor = grid[row + i][column + j];
+          neighbours.push(neighbor);
+        }
       }
-      startGrid.push(row);
     }
-    setGrid(startGrid);
+    return neighbours;
   }
 
 
@@ -39,10 +54,75 @@ function App() {
   }
 
 
+  const min = (value1, value2) => {
+    return value1 < value2 ? value1 : value2;
+  }
+
+  const pause = async () => {
+    let pauseTime = 0, resolvedValue;
+
+    while (algorithmState.current === "paused") {
+      resolvedValue = await sleep(300);
+      pauseTime += 300;
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(`Paused for ${pauseTime / 1000} seconds`);
+    })
+  }
+
+  const performGridChanges = (changes) => {
+    const newGrid = [...grid];
+    changes.forEach(change => {
+      newGrid[change.row][change.column].setStatus(change.status);
+    })
+    setGrid(newGrid);
+  }
+
+  const sleep = async (duration) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(`${duration / 1000} seconds have passed.`);
+      }, duration)
+    })
+  }
+
+
+  const visualizePath = async (source, destination) => {
+    let current, parent, resolvedValue;
+    let changes = [];
+    current = destination;
+    changes.push({row: current.getRow(), column: current.getColumn(), status: "destination"});
+    performGridChanges(changes);
+    parent = current.getParent();
+    console.log("algorith state is: ", algorithmState.current);
+    while (parent !== null && (algorithmState.current === "pending" || algorithmState.current === "paused")) {
+      changes = [];
+      current = parent;
+      changes.push({row: current.getRow(), column: current.getColumn(), status: "path"});
+      performGridChanges(changes);
+      parent = current.getParent();
+      await sleep(animationDuration);
+
+      if (algorithmState.current === "paused") {
+        resolvedValue = await pause();
+        console.log(resolvedValue);
+      }      
+    }
+    if (algorithmState.current === "pending") {
+      changes.push({row: current.getRow(), column: current.getColumn(), status: "source"});
+      performGridChanges(changes);
+      clearInterval(durationInterval.current);
+      durationInterval.current = null;
+      algorithmState.current = "finished";
+      setDisabled(false);
+    }
+  }
 
   return (
-    <AppContext.Provider value={{rows, columns, createGrid, getStatus, grid, setGrid}}>
-      <AsteriskPathFinding/>
+    <AppContext.Provider value={{rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
+    performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath}}>
+      <Dijkstra/>
     </AppContext.Provider>
   );
 }

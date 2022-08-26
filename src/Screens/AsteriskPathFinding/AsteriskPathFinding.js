@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import PriorityQueue from '../../Data Structures/PriorityQueue';
+import PriorityQueueAsterisk from '../../Data Structures/PriorityQueueAsterisk';
 import AVL from '../../Data Structures/AVL';
+import AsteriskNode from '../../Data Structures/AsteriskNode';
 import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
@@ -10,52 +11,34 @@ import styles from './AsteriskPathFinding.module.css';
 
 
 function AsteriskPathFinding() {
-  const {rows, columns, createGrid, getStatus, grid, setGrid} = useContext(AppContext);
+  const {rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
+         performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath} = useContext(AppContext);
   const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
   const [source, setSource] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [animationDuration, setAnimationDuration] = useState(0);
-  const [disabled, setDisabled] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showValueG, setShowValueG] = useState(false);
   const [showValueH, setShowValueH] = useState(false);
   const [showValueF, setShowValueF] = useState(false);
   const [duration, setDuration] = useState(0); //the running time of the algorithm
-  let durationInterval = useRef(null);
-  let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
-  //unbegan if it has not started yet
-  //pending if algorithm is currently running
-  //finished if either algorithm either has normally ended, or manually stopped
 
   useEffect(() => {    
     createGrid();
   }, [])
 
-
-  const calculateDistance = (source, destination) => {
-    const verticalDistance = Math.abs(destination.getRow() - source.getRow());
-    const horizontalDistance = Math.abs(destination.getColumn() - source.getColumn());
-    const distance = min(verticalDistance, horizontalDistance) * 14 + Math.abs(verticalDistance - horizontalDistance) * 10;
-    return distance;
-  }
-
-  const computeNeighbours = (node) => {
-    let i, j, neighbor, row, column;
-    const neighbours = [];
-    for (i = -1; i <= 1; i++) {
-      for (j = -1; j <= 1; j++) {
-        if (i === 0 && j === 0) {
-          continue;
-        }
-        row = node.getRow();
-        column = node.getColumn();
-        if ((0 <= row + i && row + i < rows) && (0 <= column + j && column + j < columns)) {
-          neighbor = grid[row + i][column + j];
-          neighbours.push(neighbor);
-        }
+  
+  const createGrid = () => {
+    //gets called only at the first render of the app, and creates a default grid with blocks that are unblocked
+    let startGrid = [];
+    let i,j,row;
+    for (i = 0; i < rows; i++) {
+      row = [];
+      for (j = 0; j < columns; j++) {
+        row.push(new AsteriskNode(i, j, "unblocked"));
       }
+      startGrid.push(row);
     }
-    return neighbours;
+    setGrid(startGrid);
   }
 
 
@@ -73,8 +56,10 @@ function AsteriskPathFinding() {
           <Block 
             key={i * columns + j} 
             handleClickBlock={handleClickBlock} 
+            algorithm="Asterisk"
             status={getStatus(i, j)} 
-            row={i} column={j} 
+            row={i} 
+            column={j} 
             valueG={valueG === 1000000 ? "1m" : valueG} 
             valueH={valueH === 1000000 ? "1m" : valueH} 
             valueF={valueF === 2000000 ? "2m" : valueF}
@@ -136,7 +121,7 @@ function AsteriskPathFinding() {
         }, 1000);
         algorithmState.current = "pending";
         setDisabled(true);
-        AsteriskPathFinding(source, destination);
+        Asterisk(source, destination);
       }
       //if algorithm is running, stop it
     } else if (algorithmState.current === "pending") {
@@ -155,8 +140,8 @@ function AsteriskPathFinding() {
       algorithmState.current = "pending";
       setDisabled(prev => !prev);
     }
-
   }
+  
 
   const handleResetButton = () => {
     resetGrid();
@@ -172,32 +157,6 @@ function AsteriskPathFinding() {
     return (0 <= row < rows) && (0 <= column < columns);
   }
 
-  const min = (value1, value2) => {
-    return value1 < value2 ? value1 : value2;
-  }
-
-
-  const pause = async () => {
-    let pauseTime = 0, resolvedValue;
-
-    while (algorithmState.current === "paused") {
-      resolvedValue = await sleep(300);
-      pauseTime += 300;
-    }
-
-    return new Promise((resolve, reject) => {
-      resolve(`Paused for ${pauseTime / 1000} seconds`);
-    })
-  }
-
-
-  const performGridChanges = (changes) => {
-    const newGrid = [...grid];
-    changes.forEach(change => {
-      newGrid[change.row][change.column].setStatus(change.status);
-    })
-    setGrid(newGrid);
-  }
 
 
   const resetGrid = () => {
@@ -229,14 +188,6 @@ function AsteriskPathFinding() {
   }
 
 
-  const sleep = async (duration) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(`${duration / 1000} seconds have passed.`);
-      }, duration)
-    })
-  }
-
   const toggleSettings = () => {
     setShowSettings(prev => !prev);
   }
@@ -254,38 +205,9 @@ function AsteriskPathFinding() {
   }
 
 
-  const visualizePath = async (source, destination) => {
-    let current, parent, resolvedValue;
-    let changes = [];
-    current = destination;
-    changes.push({row: current.getRow(), column: current.getColumn(), status: "destination"});
-    performGridChanges(changes);
-    parent = current.getParent();
-    while (parent !== null && (algorithmState.current === "pending" || algorithmState.current === "paused")) {
-      current = parent;
-      changes.push({row: current.getRow(), column: current.getColumn(), status: "path"});
-      performGridChanges(changes);
-      parent = current.getParent();
-      await sleep(animationDuration);
 
-      if (algorithmState.current === "paused") {
-        resolvedValue = await pause();
-        console.log(resolvedValue);
-      }      
-    }
-    if (algorithmState.current === "pending") {
-      changes.push({row: current.getRow(), column: current.getColumn(), status: "source"});
-      performGridChanges(changes);
-      clearInterval(durationInterval.current);
-      durationInterval.current = null;
-      algorithmState.current = "finished";
-      setDisabled(false);
-    }
-  }
-
-
-  const AsteriskPathFinding = async (source, destination) => {
-    const open = new PriorityQueue(); //contains nodes to be evaluated
+  const Asterisk = async (source, destination) => {
+    const open = new PriorityQueueAsterisk(); //contains nodes to be evaluated
     const closed = new AVL(); //contains evaluated nodes
     let current, neighbours, newDistance, found, hValue, resolvedValue, changes; //changes will be an array containing the coordinates 
     //of a node that needs to be changed and its new status

@@ -1,5 +1,3 @@
-import AVLNode from "./AVLNode";
-
 class AVL {
     constructor() {
         this._root = null;

@@ -38,8 +38,7 @@
     background-color: #002E5B;
 }
 
-
-.valueF{
+.valueD, .valueF{
     font-size: 10px;
     position: absolute;
     bottom: 0px;
