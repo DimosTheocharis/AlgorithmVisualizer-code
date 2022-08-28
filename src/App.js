@@ -1,5 +1,6 @@
 import React, { useState, createContext, useRef } from 'react';
 import NavBar from './Components/NavBar/NavBar';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 //screens
@@ -12,9 +13,9 @@ const columns = 20;
 export const AppContext = createContext(); //create a context to easily pass values to child elements
 
 function App() {
-  const [grid, setGrid] = useState(null);  
-  const [animationDuration, setAnimationDuration] = useState(0);
-  const [disabled, setDisabled] = useState(false);
+  const [grid, setGrid] = useState(null); //the grid of nodes that will be used in the algorithms
+  const [animationDuration, setAnimationDuration] = useState(0); //how fast the algorithm will run
+  const [disabled, setDisabled] = useState(false); //whether or not some buttons are disabled
   let durationInterval = useRef(null);
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
@@ -123,7 +124,11 @@ function App() {
     <AppContext.Provider value={{rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
     performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath}}>
       <NavBar/>
-      <Dijkstra/>
+      <Routes>
+        <Route path="/asterisk" element={<AsteriskPathFinding/>}/>
+        <Route path="/dijkstra" element={<Dijkstra/>}/>
+        <Route path="*" element={<AsteriskPathFinding/>}/>
+      </Routes>
     </AppContext.Provider>
   );
 }

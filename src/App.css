@@ -79,7 +79,6 @@
 .grid {
     width: 70%;
     height: 70%;
-    background-color: white;
     border: 3px solid rgb(0,0,50);
     display: grid;
     grid-template-columns: repeat(20, 1fr);

@@ -19,7 +19,8 @@ function Dijkstra() {
     const [showValueD, setShowValueD] = useState(false);
     const [duration, setDuration] = useState(0); //the running time of the algorithm
 
-    useEffect(() => {    
+    useEffect(() => {
+        console.log("mpainw Dijkstra")    
         createGrid();
     }, []);
     

@@ -23,6 +23,7 @@ function AsteriskPathFinding() {
   const [duration, setDuration] = useState(0); //the running time of the algorithm
 
   useEffect(() => {    
+    console.log("mpainw Asterisk");
     createGrid();
   }, [])
 
@@ -265,6 +266,8 @@ function AsteriskPathFinding() {
 
   //determine the color of the operator button (start/stop button) here to avoid confusion at the the render block
   const operatorButtonClassName = algorithmState.current === "pending" ? "stop" : "start";
+
+  console.log("exw mpei Asterisk")
 
   return (
       <div className={styles.container}>
