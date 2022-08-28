@@ -14,7 +14,7 @@ class AsteriskPathFinding extends Node {
         this._height = 0;
         this._leftChild = null;
         this._rightChild = null;
-        this._value = this._row * 100 + this._column;
+        this._value = this._row * 100 + this._column; //this property will be used in the avl for comparisons between nodes
     }
 
     setValueG(valueG) {

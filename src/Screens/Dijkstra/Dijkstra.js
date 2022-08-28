@@ -2,12 +2,15 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import DijkstraNode from '../../Data Structures/DijkstraNode';
 import PriorityQueueDijkstra from '../../Data Structures/PriorityQueueDijkstra';
 import Block from '../../Components/Block/Block';
+import Settings from '../../Components/Settings/Settings';
+import Timer from '../../Components/Timer/Timer';
+import { IoSettingsOutline } from "react-icons/io5";
 import { AppContext } from '../../App';
 
 import styles from './Dijkstra.module.css';
 
 function Dijkstra() {
-    const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, disabled, getStatus, grid, pause, 
+    const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
       performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath} = useContext(AppContext);
     const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
     const [source, setSource] = useState(null);
@@ -15,33 +18,9 @@ function Dijkstra() {
     const [showSettings, setShowSettings] = useState(false);
     const [showValueD, setShowValueD] = useState(false);
     const [duration, setDuration] = useState(0); //the running time of the algorithm
-    let durationInterval = useRef(null);
 
     useEffect(() => {    
         createGrid();
-        /*
-        const minHeap = new PriorityQueueDijkstra();
-        const n1 = new DijkstraNode(5,5,"unblocked");
-        const n2 = new DijkstraNode(5,5,"unblocked");
-        const n3 = new DijkstraNode(5,5,"unblocked");
-        const n4 = new DijkstraNode(5,5,"unblocked");
-        const n5 = new DijkstraNode(5,5,"unblocked");
-        n1.setValueD(15);
-        n2.setValueD(10);
-        n3.setValueD(4);
-        n4.setValueD(2);
-        n5.setValueD(1);
-        minHeap.insertNode(n1);
-        minHeap.insertNode(n2);
-        minHeap.insertNode(n3);
-        minHeap.insertNode(n4);
-        minHeap.insertNode(n5);
-        minHeap.printNodes();
-        minHeap.extractMin()
-        minHeap.printNodes();
-        minHeap.extractMin()
-        minHeap.printNodes();
-        */
     }, []);
     
 
@@ -77,6 +56,7 @@ function Dijkstra() {
                         row={i} 
                         column={j} 
                         valueD={valueD === 1000000 ? "1m" : valueD}
+                        showValueD={showValueD}
                     />
                 )
             }
@@ -156,6 +136,7 @@ function Dijkstra() {
     const handleResetButton = () => {
       resetGrid();
       algorithmState.current = "unbegun";
+      setDuration(0);
     }
   
     const handleSlider = (e) => {
@@ -175,6 +156,7 @@ function Dijkstra() {
             if (prev[i][j] === source) {
               //source
               prev[i][j].reset(row, column, "source");
+              prev[i][j].setValueD(0);
             } else if (prev[i][j] === destination) {
               //destination
               prev[i][j].reset(row, column, "destination");
@@ -190,32 +172,31 @@ function Dijkstra() {
         return [...prev];
       })
     }
-  
+
+
+    const toggleSettings = () => {
+      setShowSettings(prev => !prev);
+    }
+
+    const toggleValueD = () => {
+      setShowValueD(prev => !prev);
+    }
+
 
 
     const Dijkstra = async (source, destination) => {
       const Q = new PriorityQueueDijkstra();
-      let i,j, current, neighbours, neighbor, newDistance, changes, resolvedValue;
-      /*
-      for (i = 0; i < rows; i++) {
-        for (j = 0; j < columns; j++) {
-          Q.insertNode(grid[i][j]);
-        }
-      }
-      */
-     Q.insertNode(source);
+      let current, neighbours, neighbor, newDistance, changes, resolvedValue;
+
+      Q.insertNode(source);
       while (!Q.isEmpty()) {
         changes = [];
         current = Q.extractMin();
         changes.push({row: current.getRow(), column: current.getColumn(), status: "evaluated"});
         if (current === destination) {
-          console.log("algorith state is: ", algorithmState.current);
-          console.log("mpainw");
           visualizePath(source, destination);
-          console.log("bghka");
           return;
         }
-
         neighbours = computeNeighbours(current);
         neighbours.forEach(neighbor => {
           if (neighbor.getStatus() !== "blocked" && neighbor.getStatus() !== "evaluated") {
@@ -237,13 +218,22 @@ function Dijkstra() {
       }
     }
 
+    //object that holds the information about the settings section of the AsteriskPathFinding screen
+    const settings = [
+      {title: "Show d-value", toggleFunction: toggleValueD, enabled: showValueD}
+    ]
+
     //determine the color of the operator button (start/stop button) here to avoid confusion at the the render block
     const operatorButtonClassName = algorithmState.current === "pending" ? "stop" : "start";
 
 
     return (
         <div className={styles.container}>
-
+            <div className={styles.settings}>
+              <IoSettingsOutline className={styles.settingsIcon} onClick={toggleSettings}/>
+            </div>
+            <Settings showSettings={showSettings} settings={settings}/>
+            <Timer duration={duration}/>
             <div className={styles.componentsContainer}>
               <div className={styles.component}>
                 <div className={`${styles.componentBlock} ${styles.source}`}></div>
@@ -284,13 +274,30 @@ function Dijkstra() {
               >
                 {algorithmState.current === "pending" ? "Stop" : "Start"}
               </button>
-              <button  onClick={handlePauseButton} className={`${styles.button} ${algorithmState.current === "unbegun" || algorithmState.current === "finished" ? `${styles.disabled}` : null}`} disabled={algorithmState.current === "unbegun" || algorithmState.current === "finished"}>{algorithmState.current === "paused" ? "Resume" : "Pause"}</button>
+              <button  
+                onClick={handlePauseButton} 
+                className={`${styles.button} ${algorithmState.current === "unbegun" || algorithmState.current === "finished" ? `${styles.disabled}` : null}`} 
+                disabled={algorithmState.current === "unbegun" || algorithmState.current === "finished"}
+              >
+                {algorithmState.current === "paused" ? "Resume" : "Pause"}</button>
               <div className='sliderContainer'>
                 <input type="range" min={0} max={5000} value={animationDuration} className={`${styles.slider} ${algorithmState.current !== "unbegun" && algorithmState.current !== "finished" ? `${styles.sliderDisabled}` : `${styles.sliderEnabled}`}`} onChange={handleSlider} disabled={algorithmState.current !== "unbegun" && algorithmState.current !== "finished"}/>
                 <p className={styles.sliderText}>Animation duration: {animationDuration} milliseconds</p>
               </div>
-              <button onClick={handleResetButton} className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} disabled={disabled}>Reset</button>
-              <button onClick={handleClearButton} className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} disabled={disabled}>Clear</button>
+              <button 
+                onClick={handleResetButton} 
+                className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} 
+                disabled={disabled}
+              >
+                Reset
+              </button>
+              <button 
+                onClick={handleClearButton} 
+                className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} 
+                disabled={disabled}
+              >
+                Clear
+              </button>
             </div>
 
             <div className={styles.grid}>

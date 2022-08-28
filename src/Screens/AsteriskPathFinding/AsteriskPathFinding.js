@@ -146,6 +146,7 @@ function AsteriskPathFinding() {
   const handleResetButton = () => {
     resetGrid();
     algorithmState.current = "unbegun";
+    setDuration(0);
   }
 
   const handleSlider = (e) => {
@@ -171,6 +172,8 @@ function AsteriskPathFinding() {
           if (prev[i][j] === source) {
             //source
             prev[i][j].reset(row, column, "source");
+            prev[i][j].setValueG(0);
+            prev[i][j].setValueF(0);
           } else if (prev[i][j] === destination) {
             //destination
             prev[i][j].reset(row, column, "destination");
@@ -207,6 +210,7 @@ function AsteriskPathFinding() {
 
 
   const Asterisk = async (source, destination) => {
+    console.log(source.getValueG());
     const open = new PriorityQueueAsterisk(); //contains nodes to be evaluated
     const closed = new AVL(); //contains evaluated nodes
     let current, neighbours, newDistance, found, hValue, resolvedValue, changes; //changes will be an array containing the coordinates 

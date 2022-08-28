@@ -1,4 +1,5 @@
 import React, { useState, createContext, useRef } from 'react';
+import NavBar from './Components/NavBar/NavBar';
 import './App.css';
 
 //screens
@@ -106,7 +107,6 @@ function App() {
 
       if (algorithmState.current === "paused") {
         resolvedValue = await pause();
-        console.log(resolvedValue);
       }      
     }
     if (algorithmState.current === "pending") {
@@ -122,6 +122,7 @@ function App() {
   return (
     <AppContext.Provider value={{rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
     performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath}}>
+      <NavBar/>
       <Dijkstra/>
     </AppContext.Provider>
   );
