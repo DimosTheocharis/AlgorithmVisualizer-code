@@ -5,25 +5,28 @@ import AsteriskNode from '../../Data Structures/AsteriskNode';
 import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
+import Selector from '../../Components/Selector/Selector';
 import { AppContext } from '../../App';
 import { IoSettingsOutline } from "react-icons/io5";
+import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import styles from './AsteriskPathFinding.module.css';
 
 
 function AsteriskPathFinding() {
   const {rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
-         performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath} = useContext(AppContext);
+         performGridChanges, setAnimationDuration, setDisabled, setGrid, setShowGridInput, setShowSelector, showGridInput, showSelector, sleep, visualizePath} = useContext(AppContext);
   const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
   const [source, setSource] = useState(null);
   const [destination, setDestination] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  //the next 3 values are for the nodes of the algorithm. 
   const [showValueG, setShowValueG] = useState(false);
   const [showValueH, setShowValueH] = useState(false);
   const [showValueF, setShowValueF] = useState(false);
   const [duration, setDuration] = useState(0); //the running time of the algorithm
+  const gridNameInputRef = useRef(null);
 
   useEffect(() => {    
-    console.log("mpainw Asterisk");
     createGrid();
   }, [])
 
@@ -42,6 +45,21 @@ function AsteriskPathFinding() {
     setGrid(startGrid);
   }
 
+
+  const deconstructGrid = (grid) => {
+    //this function takes a grid of node instances as input and returns a 2d array of letters that correspond to the status of the nodes
+    //ie "U" means unblocked, "D" means destination, "S" means source etc
+    const newGrid = [];
+    let newRow;
+    grid.forEach(row => {
+      newRow = [];
+      row.forEach(node => {
+        newRow.push(node.getStatus()[0].toUpperCase());
+      })
+      newGrid.push(newRow);
+    })
+    return newGrid;
+  }
 
   const getBlocks = () => {
     //create the grid. That is, 20x20 blocks
@@ -192,6 +210,30 @@ function AsteriskPathFinding() {
   }
 
 
+  const saveGridName = () => {
+    const newName = gridNameInputRef.current.value; //take the name of the grid we want to save
+    if (newName === "") {
+      alert("The name of the grid is empty. Try typing a name for the grid you want to save.");
+    }
+    let grids = JSON.parse(localStorage.getItem("grids")); //all the saved grids
+    console.log(grids);
+    if (grids !== null) {
+      if (Object.keys(grids).find(name => name === newName)) {
+        alert("There is already a grid with the same name.");
+        return;
+      } else {
+        grids[newName] = deconstructGrid(grid);
+        localStorage.setItem("grids", JSON.stringify(grids));
+      }
+    } else {
+      grids = {};
+      grids[newName] = deconstructGrid(grid);
+      localStorage.setItem("grids", JSON.stringify(grids));
+    }
+    setShowGridInput(false);
+  }
+
+
   const toggleSettings = () => {
     setShowSettings(prev => !prev);
   }
@@ -267,8 +309,6 @@ function AsteriskPathFinding() {
   //determine the color of the operator button (start/stop button) here to avoid confusion at the the render block
   const operatorButtonClassName = algorithmState.current === "pending" ? "stop" : "start";
 
-  console.log("exw mpei Asterisk")
-
   return (
       <div className={styles.container}>
         <div className={styles.settings}>
@@ -318,13 +358,73 @@ function AsteriskPathFinding() {
           >
             {algorithmState.current === "pending" ? "Stop" : "Start"}
           </button>
-          <button  onClick={handlePauseButton} className={`${styles.button} ${algorithmState.current === "unbegun" || algorithmState.current === "finished" ? `${styles.disabled}` : null}`} disabled={algorithmState.current === "unbegun" || algorithmState.current === "finished"}>{algorithmState.current === "paused" ? "Resume" : "Pause"}</button>
+          <button 
+            onClick={handlePauseButton} 
+            className={`${styles.button} ${algorithmState.current === "unbegun" || algorithmState.current === "finished" ? `${styles.disabled}` : null}`} 
+            disabled={algorithmState.current === "unbegun" || algorithmState.current === "finished"}
+          >
+            {algorithmState.current === "paused" ? "Resume" : "Pause"}
+          </button>
           <div className='sliderContainer'>
-            <input type="range" min={0} max={5000} value={animationDuration} className={`${styles.slider} ${algorithmState.current !== "unbegun" && algorithmState.current !== "finished" ? `${styles.sliderDisabled}` : `${styles.sliderEnabled}`}`} onChange={handleSlider} disabled={algorithmState.current !== "unbegun" && algorithmState.current !== "finished"}/>
+            <input 
+              type="range" 
+              min={0} 
+              max={5000} 
+              value={animationDuration} 
+              className={`${styles.slider} ${algorithmState.current !== "unbegun" && algorithmState.current !== "finished" ? `${styles.sliderDisabled}` : `${styles.sliderEnabled}`}`} 
+              onChange={handleSlider} 
+              disabled={algorithmState.current !== "unbegun" && algorithmState.current !== "finished"}
+            />
             <p className={styles.sliderText}>Animation duration: {animationDuration} milliseconds</p>
           </div>
-          <button onClick={handleResetButton} className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} disabled={disabled}>Reset</button>
-          <button onClick={handleClearButton} className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} disabled={disabled}>Clear</button>
+          <button 
+            onClick={handleResetButton} 
+            className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} 
+            disabled={disabled}
+          >
+            Reset
+          </button>
+          <button 
+            onClick={handleClearButton} 
+            className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} 
+            disabled={disabled}
+          >
+            Clear
+          </button>
+          <div className={styles.saveLoadGridContainer}>
+            <div className={styles.saveGridContainer}>
+              <button
+                className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`}
+                disabled={disabled}
+                onClick={() => setShowGridInput(true)}
+              >
+                Save grid
+              </button>
+              <input 
+                type="text"
+                hidden={!showGridInput}
+                className={styles.gridNameInput}
+                ref={gridNameInputRef}
+              />
+              <BsFillArrowRightSquareFill
+                className={`${styles.submitGridName} ${showGridInput ? null : styles.submitGridNameHidden}`}
+                onClick={saveGridName}
+              />
+            </div>
+
+
+            <div className={styles.loadGridContainer}>
+              <button
+                className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`}
+                disabled={disabled}
+                onClick={() => setShowSelector(true)}
+              >
+                Load grid
+              </button>
+              <Selector showSelector={showSelector}/>
+            </div>
+
+          </div>
         </div>
         <div className={styles.grid}>
           {getBlocks()}

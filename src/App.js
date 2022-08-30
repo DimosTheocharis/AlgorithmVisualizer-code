@@ -15,7 +15,9 @@ export const AppContext = createContext(); //create a context to easily pass val
 function App() {
   const [grid, setGrid] = useState(null); //the grid of nodes that will be used in the algorithms
   const [animationDuration, setAnimationDuration] = useState(0); //how fast the algorithm will run
-  const [disabled, setDisabled] = useState(false); //whether or not some buttons are disabled
+  const [disabled, setDisabled] = useState(false); //whether or not some buttons are disabled 
+  const [showGridInput, setShowGridInput] = useState(false); //whether the input for typing the name of the grid you want to save is visible
+  const [showSelector, setShowSelector] = useState(false); //whether the drop-down menu of saved grids is visible
   let durationInterval = useRef(null);
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
@@ -122,7 +124,7 @@ function App() {
 
   return (
     <AppContext.Provider value={{rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
-    performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath}}>
+    performGridChanges, setAnimationDuration, setDisabled, setGrid, setShowGridInput, setShowSelector, showGridInput, showSelector, sleep, visualizePath}}>
       <NavBar/>
       <Routes>
         <Route path="/asterisk" element={<AsteriskPathFinding/>}/>
