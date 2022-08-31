@@ -4,23 +4,26 @@ import PriorityQueueDijkstra from '../../Data Structures/PriorityQueueDijkstra';
 import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
+import Selector from '../../Components/Selector/Selector';
 import { IoSettingsOutline } from "react-icons/io5";
+import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { AppContext } from '../../App';
 
 import styles from './Dijkstra.module.css';
 
 function Dijkstra() {
-    const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
-      performGridChanges, setAnimationDuration, setDisabled, setGrid, sleep, visualizePath} = useContext(AppContext);
+    const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, destination, disabled, durationInterval, 
+           getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, pause, performGridChanges, 
+           savedGrids, saveGrid,setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setSavedGrids, setShowSelector, 
+           setSource, showGridInput, showSelector, sleep, source, visualizePath} = useContext(AppContext);
     const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
-    const [source, setSource] = useState(null);
-    const [destination, setDestination] = useState(null);
     const [showSettings, setShowSettings] = useState(false);
     const [showValueD, setShowValueD] = useState(false);
     const [duration, setDuration] = useState(0); //the running time of the algorithm
 
     useEffect(() => {
-        console.log("mpainw Dijkstra")    
+        const grids = loadSavedGrids();
+        setSavedGrids(grids);  
         createGrid();
     }, []);
     
@@ -101,6 +104,7 @@ function Dijkstra() {
         setGrid(newGrid);
     }
 
+
     const handleOperationButton = () => {
       //if algorithm is not running, then run.
       if (algorithmState.current === "unbegun") {
@@ -111,6 +115,9 @@ function Dijkstra() {
           }, 1000);
           algorithmState.current = "pending";
           setDisabled(true);
+          setIsDisabled(prev => {
+            return {...prev, "saveButton": true}
+          })
           Dijkstra(source, destination);
         }
         //if algorithm is running, stop it
@@ -127,6 +134,9 @@ function Dijkstra() {
       if (algorithmState.current === "pending") {
         algorithmState.current = "paused";
         setDisabled(prev => !prev);
+        setIsDisabled(prev => {
+          return {...prev, "loadButton": false}
+        });
       } else {
         algorithmState.current = "pending";
         setDisabled(prev => !prev);
@@ -138,10 +148,42 @@ function Dijkstra() {
       resetGrid();
       algorithmState.current = "unbegun";
       setDuration(0);
+      setIsDisabled(prev => {
+        return {...prev, "saveButton" : false}
+      });
     }
+    
   
     const handleSlider = (e) => {
       setAnimationDuration(e.target.value);
+    }
+
+
+    const loadGrid = (gridName) => {
+      const deconstructedGrid = savedGrids[gridName];
+      const dictionary = {
+        "S": "source",
+        "D": "destination",
+        "B": "blocked",
+        "U": "unblocked",
+      }
+      let grid = [];
+      let i, j, row, status;
+      for (i = 0; i < rows; i++) {
+        row = [];
+        for (j = 0; j < columns; j++) {
+          status = dictionary[deconstructedGrid[i][j]];
+          row.push(new DijkstraNode(i, j, status));
+          if (status === "source") {
+            setSource(row[j]);
+            row[j].setValueD(0);
+          } else if (status === "destination") {
+            setDestination(row[j]);
+          }
+        }
+        grid.push(row);
+      }
+      setGrid(grid);
     }
 
 
@@ -299,6 +341,45 @@ function Dijkstra() {
               >
                 Clear
               </button>
+
+              <div className={styles.saveLoadGridContainer}>
+                <div className={styles.saveGridContainer}>
+                  <button
+                    className={`${styles.button} ${isDisabled["saveButton"] ? `${styles.disabled}` : null}`}
+                    disabled={isDisabled["saveButton"]}
+                    onClick={handleSaveButton}
+                  >
+                    {
+                      showGridInput ? "Close" : "Save grid"
+                    }
+                  </button>
+                  <input 
+                    type="text"
+                    hidden={!showGridInput}
+                    className={styles.gridNameInput}
+                    ref={gridNameInputRef}
+                  />
+                  <BsFillArrowRightSquareFill
+                    className={`${styles.submitGridName} ${showGridInput ? null : styles.submitGridNameHidden}`}
+                    onClick={saveGrid}
+                  />
+                </div>
+
+
+                <div className={styles.loadGridContainer}>
+                  <button
+                    className={`${styles.button} ${isDisabled["loadButton"] ? `${styles.disabled}` : null}`}
+                    disabled={isDisabled["loadButton"]}
+                    onClick={handleLoadButton}
+                  >
+                    {
+                      showSelector ? "Close" : "Load grid"
+                    }
+                  </button>
+                  <Selector grids={savedGrids} loadGrid={loadGrid} setNextBlock={setNextBlock} setSavedGrids={setSavedGrids}/>
+                </div>
+
+              </div>
             </div>
 
             <div className={styles.grid}>

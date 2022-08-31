@@ -13,20 +13,21 @@ import styles from './AsteriskPathFinding.module.css';
 
 
 function AsteriskPathFinding() {
-  const {rows, algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, disabled, durationInterval, getStatus, grid, pause, 
-         performGridChanges, setAnimationDuration, setDisabled, setGrid, setShowGridInput, setShowSelector, showGridInput, showSelector, sleep, visualizePath} = useContext(AppContext);
+  const { algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, durationInterval, getStatus, 
+          grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, pause, performGridChanges, rows, savedGrids, 
+          saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setSavedGrids, setShowGridInput, setShowSelector, 
+          setSource, showGridInput, showSelector, sleep, source, visualizePath} = useContext(AppContext);
   const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
-  const [source, setSource] = useState(null);
-  const [destination, setDestination] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   //the next 3 values are for the nodes of the algorithm. 
   const [showValueG, setShowValueG] = useState(false);
   const [showValueH, setShowValueH] = useState(false);
   const [showValueF, setShowValueF] = useState(false);
   const [duration, setDuration] = useState(0); //the running time of the algorithm
-  const gridNameInputRef = useRef(null);
 
-  useEffect(() => {    
+  useEffect(() => {  
+    const grids = loadSavedGrids();
+    setSavedGrids(grids);
     createGrid();
   }, [])
 
@@ -45,21 +46,6 @@ function AsteriskPathFinding() {
     setGrid(startGrid);
   }
 
-
-  const deconstructGrid = (grid) => {
-    //this function takes a grid of node instances as input and returns a 2d array of letters that correspond to the status of the nodes
-    //ie "U" means unblocked, "D" means destination, "S" means source etc
-    const newGrid = [];
-    let newRow;
-    grid.forEach(row => {
-      newRow = [];
-      row.forEach(node => {
-        newRow.push(node.getStatus()[0].toUpperCase());
-      })
-      newGrid.push(newRow);
-    })
-    return newGrid;
-  }
 
   const getBlocks = () => {
     //create the grid. That is, 20x20 blocks
@@ -140,6 +126,9 @@ function AsteriskPathFinding() {
         }, 1000);
         algorithmState.current = "pending";
         setDisabled(true);
+        setIsDisabled(prev => {
+          return {...prev, "saveButton": true}
+        })
         Asterisk(source, destination);
       }
       //if algorithm is running, stop it
@@ -151,13 +140,20 @@ function AsteriskPathFinding() {
     } 
   }
 
+
   const handlePauseButton = () => {
     if (algorithmState.current === "pending") {
       algorithmState.current = "paused";
       setDisabled(prev => !prev);
+      setIsDisabled(prev => {
+        return {...prev, "loadButton": false}
+      });
     } else {
       algorithmState.current = "pending";
       setDisabled(prev => !prev);
+      setIsDisabled(prev => {
+        return {...prev, "loadButton": true}
+      })
     }
   }
   
@@ -166,15 +162,43 @@ function AsteriskPathFinding() {
     resetGrid();
     algorithmState.current = "unbegun";
     setDuration(0);
+    setIsDisabled(prev => {
+      return {...prev, "saveButton" : false}
+    });
   }
+
 
   const handleSlider = (e) => {
     setAnimationDuration(e.target.value);
   }
 
 
-  const insideOfGrid = (row, column) => {
-    return (0 <= row < rows) && (0 <= column < columns);
+  const loadGrid = (gridName) => {
+    const deconstructedGrid = savedGrids[gridName];
+    const dictionary = {
+      "S": "source",
+      "D": "destination",
+      "B": "blocked",
+      "U": "unblocked",
+    }
+    let grid = [];
+    let i, j, row, status;
+    for (i = 0; i < rows; i++) {
+      row = [];
+      for (j = 0; j < columns; j++) {
+        status = dictionary[deconstructedGrid[i][j]];
+        row.push(new AsteriskNode(i, j, status));
+        if (status === "source") {
+          setSource(row[j]);
+          row[j].setValueG(0);
+          row[j].getValueF(0);
+        } else if (status === "destination") {
+          setDestination(row[j]);
+        }
+      }
+      grid.push(row);
+    }
+    setGrid(grid);
   }
 
 
@@ -207,30 +231,6 @@ function AsteriskPathFinding() {
       }
       return [...prev];
     })
-  }
-
-
-  const saveGridName = () => {
-    const newName = gridNameInputRef.current.value; //take the name of the grid we want to save
-    if (newName === "") {
-      alert("The name of the grid is empty. Try typing a name for the grid you want to save.");
-    }
-    let grids = JSON.parse(localStorage.getItem("grids")); //all the saved grids
-    console.log(grids);
-    if (grids !== null) {
-      if (Object.keys(grids).find(name => name === newName)) {
-        alert("There is already a grid with the same name.");
-        return;
-      } else {
-        grids[newName] = deconstructGrid(grid);
-        localStorage.setItem("grids", JSON.stringify(grids));
-      }
-    } else {
-      grids = {};
-      grids[newName] = deconstructGrid(grid);
-      localStorage.setItem("grids", JSON.stringify(grids));
-    }
-    setShowGridInput(false);
   }
 
 
@@ -394,11 +394,13 @@ function AsteriskPathFinding() {
           <div className={styles.saveLoadGridContainer}>
             <div className={styles.saveGridContainer}>
               <button
-                className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`}
-                disabled={disabled}
-                onClick={() => setShowGridInput(true)}
+                className={`${styles.button} ${isDisabled["saveButton"] ? `${styles.disabled}` : null}`}
+                disabled={isDisabled["saveButton"]}
+                onClick={handleSaveButton}
               >
-                Save grid
+                {
+                  showGridInput ? "Close" : "Save grid"
+                }
               </button>
               <input 
                 type="text"
@@ -408,20 +410,22 @@ function AsteriskPathFinding() {
               />
               <BsFillArrowRightSquareFill
                 className={`${styles.submitGridName} ${showGridInput ? null : styles.submitGridNameHidden}`}
-                onClick={saveGridName}
+                onClick={saveGrid}
               />
             </div>
 
 
             <div className={styles.loadGridContainer}>
               <button
-                className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`}
-                disabled={disabled}
-                onClick={() => setShowSelector(true)}
+                className={`${styles.button} ${isDisabled["loadButton"] ? `${styles.disabled}` : null}`}
+                disabled={isDisabled["loadButton"]}
+                onClick={handleLoadButton}
               >
-                Load grid
+                {
+                  showSelector ? "Close" : "Load grid"
+                }
               </button>
-              <Selector showSelector={showSelector}/>
+              <Selector grids={savedGrids} loadGrid={loadGrid} setNextBlock={setNextBlock} setSavedGrids={setSavedGrids}/>
             </div>
 
           </div>
