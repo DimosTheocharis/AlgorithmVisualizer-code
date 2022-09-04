@@ -1,11 +1,12 @@
-import React, { useState, createContext, useRef } from 'react';
+import React, { useState, createContext, useRef, useEffect } from 'react';
 import NavBar from './Components/NavBar/NavBar';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 //screens
-import AsteriskPathFinding from './Screens/AsteriskPathFinding/AsteriskPathFinding';
+import Asterisk from './Screens/Asterisk/Asterisk';
 import Dijkstra from './Screens/Dijkstra/Dijkstra';
+import Comparison from './Screens/Comparison/Comparison';
 
 const rows = 20;
 const columns = 20;
@@ -15,22 +16,33 @@ export const AppContext = createContext(); //create a context to easily pass val
 function App() {
   const [grid, setGrid] = useState(null); //the grid of nodes that will be used in the algorithms
   const [animationDuration, setAnimationDuration] = useState(0); //how fast the algorithm will run
+  const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
   const [disabled, setDisabled] = useState(false); //whether or not some buttons are disabled 
   const [isDisabled, setIsDisabled] = useState({
     "loadButton": false,
     "saveButton": false,
+    "snapshotButton": true,
   })
   const [showGridInput, setShowGridInput] = useState(false); //whether the input for typing the name of the grid you want to save is visible
   const [showSelector, setShowSelector] = useState(false); //whether the drop-down menu of saved grids is visible
-  const [savedGrids, setSavedGrids] = useState(null);
+  const [savedGrids, setSavedGrids] = useState({});
+  const [snapshots, setSnapshots] = useState({"Asterisk": {}, "Dijkstra": {}}); //all saved snapshots for the algorithms
   const [source, setSource] = useState(null);
   const [destination, setDestination] = useState(null);
+  const [selectedGridName, setSelectedGridName] = useState(""); //it holds the name of the grid that is currently been reviewed and got selected from the selector
   let durationInterval = useRef(null);
   let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
   //unbegan if it has not started yet
   //pending if algorithm is currently running
   //finished if either algorithm either has normally ended, or manually stopped
   const gridNameInputRef = useRef(null);
+
+
+  useEffect(() => {
+    console.log("hi")
+    const snaps = JSON.parse(localStorage.getItem("snapshots"));
+    setSnapshots(snaps !== null ? snaps : {"Asterisk": {}, "Dijkstra": {}});
+  }, [])
 
   const calculateDistance = (source, destination) => {
     const verticalDistance = Math.abs(destination.getRow() - source.getRow());
@@ -59,7 +71,6 @@ function App() {
     return neighbours;
   }
 
-
   const deconstructGrid = (grid) => {
     //this function takes a grid of node instances as input and returns a 2d array of letters that correspond to the status of the nodes
     //ie "U" means unblocked, "D" means destination, "S" means source etc
@@ -68,7 +79,13 @@ function App() {
     grid.forEach(row => {
       newRow = [];
       row.forEach(node => {
-        newRow.push(node.getStatus()[0].toUpperCase());
+        if (node.getStatus() === "evaluated") {
+          newRow.push("E1");
+        } else if (node.getStatus() === "evaluating") {
+          newRow.push("E2");
+        } else {
+          newRow.push(node.getStatus()[0].toUpperCase());
+        }
       })
       newGrid.push(newRow);
     })
@@ -160,9 +177,25 @@ function App() {
   }
 
 
+  const takeSnapshot = (algorithm) => {
+    const deconstructedGrid = deconstructGrid(grid);
+    let snapshots = JSON.parse(localStorage.getItem("snapshots"));
+    if (snapshots === null) {
+      //if snapshots hasn't been create, then create new object
+      snapshots = {};
+      snapshots["Asterisk"] = {};
+      snapshots["Dijkstra"] = {};
+    }
+    snapshots[algorithm][selectedGridName] = deconstructedGrid; //add the snapshot to the snapshots object at the corresponding algorithm
+    localStorage.setItem("snapshots", JSON.stringify(snapshots)); //save the changes
+    setSnapshots(snapshots);
+  }
+
+
   const visualizePath = async (source, destination) => {
     let current, parent, resolvedValue;
     let changes = [];
+    //instead of updating the dom every time a single block is changed, i gather all the changes in a simple repetition and update the dom for all these changes
     current = destination;
     changes.push({row: current.getRow(), column: current.getColumn(), status: "destination"});
     performGridChanges(changes);
@@ -187,21 +220,24 @@ function App() {
       algorithmState.current = "finished";
       setDisabled(false);
       setIsDisabled(prev => {
-        return {...prev, "loadButton": false}
-      })
+        return {...prev, "loadButton": false, "snapshotButton": selectedGridName === "none"}
+      });
+      //if a grid has been selected and the algorithm has ended, then the user can take a snapshot of the eventual grid (used in comparison screen)
     }
   }
 
   return (
     <AppContext.Provider value={{ algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, 
-      durationInterval, getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, pause, 
-      performGridChanges, rows, savedGrids, saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setSavedGrids, 
-      setShowGridInput, setShowSelector, setSource, showGridInput, showSelector, sleep, source, visualizePath}}>
+      durationInterval, getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, nextBlock, pause, 
+      performGridChanges, rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled,
+      setNextBlock, setSavedGrids, setSelectedGridName, setShowGridInput, setShowSelector, setSnapshots, setSource, showGridInput, showSelector, 
+      snapshots, sleep, source, takeSnapshot, visualizePath}}>
       <NavBar/>
       <Routes>
-        <Route exact path="/asterisk" element={<AsteriskPathFinding/>}/>
+        <Route exact path="/asterisk" element={<Asterisk/>}/>
         <Route path="/dijkstra" element={<Dijkstra/>}/>
-        <Route path="*" element={<AsteriskPathFinding/>}/>
+        <Route path="/comparison" element={<Comparison/>}/>
+        <Route path="*" element={<Asterisk/>}/>
       </Routes>
     </AppContext.Provider>
   );

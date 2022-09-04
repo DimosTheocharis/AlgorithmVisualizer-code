@@ -1,3 +1,5 @@
+//the data for the menu navigation bar
+
 const SiderbarData = [
     {
         title: "Asterisk",
@@ -6,6 +8,10 @@ const SiderbarData = [
     {
         title: "Dijkstra",
         path: "/dijkstra"
+    },
+    {
+        title: "Comparison",
+        path: "/comparison"
     }
 ];
 

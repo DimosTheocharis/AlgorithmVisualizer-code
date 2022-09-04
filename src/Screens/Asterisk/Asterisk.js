@@ -6,18 +6,18 @@ import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
 import Selector from '../../Components/Selector/Selector';
+import Selector2 from '../../Components/Selector2/Selector2';
 import { AppContext } from '../../App';
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
-import styles from './AsteriskPathFinding.module.css';
+import styles from './Asterisk.module.css';
 
 
-function AsteriskPathFinding() {
+function Asterisk() {
   const { algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, durationInterval, getStatus, 
-          grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, pause, performGridChanges, rows, savedGrids, 
-          saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setSavedGrids, setShowGridInput, setShowSelector, 
-          setSource, showGridInput, showSelector, sleep, source, visualizePath} = useContext(AppContext);
-  const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
+          grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, nextBlock, pause, performGridChanges, rows, 
+          savedGrids, saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, setSavedGrids, 
+          setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
   const [showSettings, setShowSettings] = useState(false);
   //the next 3 values are for the nodes of the algorithm. 
   const [showValueG, setShowValueG] = useState(false);
@@ -84,6 +84,7 @@ function AsteriskPathFinding() {
     setSource(null);
     setDestination(null);
     setNextBlock("source");
+    setSelectedGridName("");
     algorithmState.current = "unbegun";
   }
 
@@ -113,6 +114,13 @@ function AsteriskPathFinding() {
     }
     
     setGrid(newGrid);
+  }
+
+
+  const handleDeleteGrid = (newGrids) => {
+    //the function that will be called when the user deletes a grid from the selector
+    setSavedGrids(newGrids); 
+    setShowSelector(false); 
   }
 
 
@@ -163,8 +171,17 @@ function AsteriskPathFinding() {
     algorithmState.current = "unbegun";
     setDuration(0);
     setIsDisabled(prev => {
-      return {...prev, "saveButton" : false}
+      return {...prev, "saveButton" : false, "snapshotButton": true}
     });
+  }
+
+  const handleSelectGrid = (gridName) => {
+    //the function that will be called when the user selects a grid from the selector
+    loadGrid(gridName); 
+    setShowSelector(false); 
+    setDisabled(false); 
+    algorithmState.current = "unbegun"; 
+    setNextBlock("blocked"); 
   }
 
 
@@ -299,7 +316,7 @@ function AsteriskPathFinding() {
     }
   }
 
-  //object that holds the information about the settings section of the AsteriskPathFinding screen
+  //object that holds the information about the settings section of the Asterisk screen
   const settings = [
     {title: "Show g-value", toggleFunction: toggleValueG, enabled: showValueG},
     {title: "Show h-value", toggleFunction: toggleValueH, enabled: showValueH},
@@ -425,10 +442,28 @@ function AsteriskPathFinding() {
                   showSelector ? "Close" : "Load grid"
                 }
               </button>
-              <Selector grids={savedGrids} loadGrid={loadGrid} setNextBlock={setNextBlock} setSavedGrids={setSavedGrids}/>
+              {/*<Selector grids={savedGrids} loadGrid={loadGrid} screen="AlgorithmScreen"/>*/}
+              {
+                <Selector2 
+                  grids={savedGrids} 
+                  gridsName="grids" 
+                  handleSelectGrid={handleSelectGrid} 
+                  handleDeleteGrid={handleDeleteGrid} 
+                  showSelector={showSelector}
+                />
+              }
+              
             </div>
 
           </div>
+
+          <button
+            className={`${styles.button} ${isDisabled["snapshotButton"] ? `${styles.disabled}` : null}`}
+            disabled={isDisabled["snapshotButton"]}
+            onClick={() => takeSnapshot("Asterisk")}
+          >
+            Take snapshot
+          </button>
         </div>
         <div className={styles.grid}>
           {getBlocks()}
@@ -437,4 +472,4 @@ function AsteriskPathFinding() {
   );
 }
 
-export default AsteriskPathFinding;
+export default Asterisk;

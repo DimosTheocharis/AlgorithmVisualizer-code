@@ -2,10 +2,12 @@ import React, { useState, useContext } from 'react';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { AppContext } from '../../App';
 import { RiDeleteBin6Line } from "react-icons/ri";
-import SelectorCSS from './Selector.module.css';
+import SelectorCSS from './Selector2.module.css';
 
-function Selector({ grids, loadGrid = null, screen, setGridName = null,  }) {
-    const { algorithmState, setDisabled, setNextBlock, setSavedGrids, setSelectedGridName, setShowSelector, showSelector } = useContext(AppContext);
+function Selector2({ grids, gridsName, handleSelectGrid, handleDeleteGrid, showSelector}) {
+    //this component is used in 2 different places, in an algorithm screen like Asterisk, and in Comparison screen with different type of grids
+    //and purpose. Thus, there is a need to call different functions when a grid is saved and deleted.
+    const { selectedGridName, setSelectedGridName, } = useContext(AppContext);
     const [expand, setExpand] = useState(false);
 
     const toggleSelector = () => {
@@ -15,35 +17,24 @@ function Selector({ grids, loadGrid = null, screen, setGridName = null,  }) {
     const selectGrid = (gridName) => {
         //takes the name of the selected grid, loads the grid and prepares the algorithm for running
         setExpand(false);
-        if (screen === "AlgorithmScreen") {
-            loadGrid(gridName);
-            setShowSelector(false);
-            setDisabled(false);
-            algorithmState.current = "unbegun";
-            setNextBlock("blocked");
-            setSelectedGridName(gridName);
-        } else {
-            setGridName(gridName);
-
-        }
-        
+        setSelectedGridName(gridName);
+        handleSelectGrid(gridName)
     }
 
     const deleteGrid = (gridName) => {
         //deletes the name of the selected grid
-        const newGrids = {...grids};
-        delete newGrids[gridName];
-        localStorage.setItem("grids", JSON.stringify(newGrids));
-        setSavedGrids(newGrids);
-        setExpand(false);
-        setShowSelector(false);
+        setExpand(false); 
+        const newGrids = {...grids}; 
+        delete newGrids[gridName]; 
+        localStorage.setItem(gridsName, JSON.stringify(newGrids));
+        handleDeleteGrid(newGrids);
     }
 
     return (
         <div className={`${SelectorCSS.container} ${showSelector ? null : SelectorCSS.containerHidden}`}>
             <div className={SelectorCSS.selectorContainer}>
                 <div className={SelectorCSS.selectionContainer}>
-                    <p className={SelectorCSS.selectionMessage}>Select a grid</p>
+                    <p className={SelectorCSS.selectionMessage}>{selectedGridName === "" ? "Select a grid" : selectedGridName}</p>
                 </div>
                 <div className={SelectorCSS.button} onClick={toggleSelector}>
                     {
@@ -79,4 +70,4 @@ function Selector({ grids, loadGrid = null, screen, setGridName = null,  }) {
     )
 }
 
-export default Selector;
+export default Selector2;

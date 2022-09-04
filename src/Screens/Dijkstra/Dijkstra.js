@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, } from 'react';
 import DijkstraNode from '../../Data Structures/DijkstraNode';
 import PriorityQueueDijkstra from '../../Data Structures/PriorityQueueDijkstra';
 import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
 import Selector from '../../Components/Selector/Selector';
+import Selector2 from '../../Components/Selector2/Selector2';
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { AppContext } from '../../App';
@@ -13,10 +14,9 @@ import styles from './Dijkstra.module.css';
 
 function Dijkstra() {
     const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, destination, disabled, durationInterval, 
-           getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, pause, performGridChanges, 
-           savedGrids, saveGrid,setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setSavedGrids, setShowSelector, 
-           setSource, showGridInput, showSelector, sleep, source, visualizePath} = useContext(AppContext);
-    const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
+           getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids,nextBlock, pause, 
+           performGridChanges, savedGrids, saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
+           setSavedGrids, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
     const [showSettings, setShowSettings] = useState(false);
     const [showValueD, setShowValueD] = useState(false);
     const [duration, setDuration] = useState(0); //the running time of the algorithm
@@ -105,6 +105,13 @@ function Dijkstra() {
     }
 
 
+    const handleDeleteGrid = (newGrids) => {
+      //the function that will be called when the user deletes a grid from the selector
+      setSavedGrids(newGrids); 
+      setShowSelector(false); 
+    }
+
+
     const handleOperationButton = () => {
       //if algorithm is not running, then run.
       if (algorithmState.current === "unbegun") {
@@ -149,8 +156,18 @@ function Dijkstra() {
       algorithmState.current = "unbegun";
       setDuration(0);
       setIsDisabled(prev => {
-        return {...prev, "saveButton" : false}
+        return {...prev, "saveButton" : false, "snapshotButton": true}
       });
+    }
+
+
+    const handleSelectGrid = (gridName) => {
+      //the function that will be called when the user selects a grid from the selector
+      loadGrid(gridName); 
+      setShowSelector(false); 
+      setDisabled(false); 
+      algorithmState.current = "unbegun"; 
+      setNextBlock("blocked"); 
     }
     
   
@@ -376,10 +393,26 @@ function Dijkstra() {
                       showSelector ? "Close" : "Load grid"
                     }
                   </button>
-                  <Selector grids={savedGrids} loadGrid={loadGrid} setNextBlock={setNextBlock} setSavedGrids={setSavedGrids}/>
+                  {
+                    <Selector2 
+                      grids={savedGrids} 
+                      gridsName="grids" 
+                      handleSelectGrid={handleSelectGrid} 
+                      handleDeleteGrid={handleDeleteGrid} 
+                      showSelector={showSelector}
+                    />
+                  }
                 </div>
 
               </div>
+
+              <button
+                className={`${styles.button} ${isDisabled["snapshotButton"] ? `${styles.disabled}` : null}`}
+                disabled={isDisabled["snapshotButton"]}
+                onClick={() => takeSnapshot("Dijkstra")}
+              >
+                Take snapshot
+              </button>
             </div>
 
             <div className={styles.grid}>
