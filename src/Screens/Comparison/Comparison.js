@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Selector from '../../Components/Selector/Selector';
-import Selector2 from '../../Components/Selector2/Selector2';
 import { AppContext } from '../../App';
 import ComparisonCSS from './Comparison.module.css';
 
@@ -16,13 +15,16 @@ const dictionary = {
 
 function Comparison() {
     //the screen will display snapshots of algorithms for the grid with the same name as the selectedGridName
-    const { columns, rows, savedGrids, selectedGridName, setSavedGrids, setSnapshots, snapshots, } = useContext(AppContext);
+    const { columns, rows, savedGrids, selectedGridName, setSavedGrids, setSelectedGridName, setSnapshots, snapshots, } = useContext(AppContext);
     const [asteriskSnapshot, setAsteriskSnapshot] = useState(null); //the snapshot of the selected grid for the algorithm Asterisk
     const [dijkstraSnapshot, setDijkstraSnapshot] = useState(null); //the snapshot of the selected grid for the algorithm Dijkstra
 
 
+    useEffect(() => {
+        setSelectedGridName("");
+    }, [])
+
     const determineAsteriskPlaceholder = () => {
-        console.log(asteriskSnapshot, "g");
         //determines what react code will be displayed at the placeholder for the grid of the asterisk algorithm
         if (selectedGridName === "") {
             return (
@@ -91,8 +93,21 @@ function Comparison() {
 
     const handleDeleteGrid = (gridName) => {
         //the function that will be called when a user deletes a grid from the selector
-        const a = 4;
+        
+        //delete the grid of the gridName from the grids and save the change to localStorage
+        const newGrids = {...savedGrids};
+        delete newGrids[gridName];
+        setSavedGrids(newGrids);
+        localStorage.setItem("grids", JSON.stringify(newGrids));
+
+        //delete the snapshot of the gridName from the grids and save the change to localStorage
+        const newSnaps = {...snapshots};
+        delete newSnaps["Asterisk"][gridName];
+        delete newSnaps["Dijkstra"][gridName];
+        setSnapshots(newSnaps);
+        localStorage.setItem("snapshots", JSON.stringify(newSnaps));
     }
+    
 
     const handleSelectGrid = (gridName) => {
         //the function that will be called when the user selects a grid from the selector
@@ -105,7 +120,6 @@ function Comparison() {
         //process for Dijkstra algorithm
         snapshotIndex = Object.keys(snapshots["Dijkstra"]).findIndex(item => item === gridName);
         snapshot = snapshotIndex === -1 ? null : snapshots["Dijkstra"][gridName];
-        console.log(snapshot);
         setDijkstraSnapshot(snapshot);
     }
 
@@ -124,11 +138,10 @@ function Comparison() {
                     <div className={ComparisonCSS.gridPlaceholder}>
                         {determineDijkstraPlaceholder()}
                     </div>
-                </div>
-                {/*<Selector grids={snapshots} screen="ComparisonScreen" setGridName={setGridName}/>*/}             
+                </div>           
             </div>
             <div className={ComparisonCSS.loadGridContainer}>
-                <Selector2 
+                <Selector
                   grids={savedGrids} 
                   gridsName="grids" 
                   handleSelectGrid={handleSelectGrid} 

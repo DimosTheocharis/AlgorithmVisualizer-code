@@ -14,6 +14,7 @@ const columns = 20;
 export const AppContext = createContext(); //create a context to easily pass values to child elements
 
 function App() {
+  const [displayedScreen, setDisplayedScreen] = useState("Asterisk");
   const [grid, setGrid] = useState(null); //the grid of nodes that will be used in the algorithms
   const [animationDuration, setAnimationDuration] = useState(0); //how fast the algorithm will run
   const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
@@ -39,7 +40,6 @@ function App() {
 
 
   useEffect(() => {
-    console.log("hi")
     const snaps = JSON.parse(localStorage.getItem("snapshots"));
     setSnapshots(snaps !== null ? snaps : {"Asterisk": {}, "Dijkstra": {}});
   }, [])
@@ -189,6 +189,7 @@ function App() {
     snapshots[algorithm][selectedGridName] = deconstructedGrid; //add the snapshot to the snapshots object at the corresponding algorithm
     localStorage.setItem("snapshots", JSON.stringify(snapshots)); //save the changes
     setSnapshots(snapshots);
+    setIsDisabled(prev => ({...prev, "snapshotButton": true}));
   }
 
 
@@ -220,7 +221,7 @@ function App() {
       algorithmState.current = "finished";
       setDisabled(false);
       setIsDisabled(prev => {
-        return {...prev, "loadButton": false, "snapshotButton": selectedGridName === "none"}
+        return {...prev, "loadButton": false, "snapshotButton": selectedGridName === ""}
       });
       //if a grid has been selected and the algorithm has ended, then the user can take a snapshot of the eventual grid (used in comparison screen)
     }
@@ -232,7 +233,7 @@ function App() {
       performGridChanges, rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled,
       setNextBlock, setSavedGrids, setSelectedGridName, setShowGridInput, setShowSelector, setSnapshots, setSource, showGridInput, showSelector, 
       snapshots, sleep, source, takeSnapshot, visualizePath}}>
-      <NavBar/>
+      <NavBar displayedScreen={displayedScreen} setDisplayedScreen={setDisplayedScreen}/>
       <Routes>
         <Route exact path="/asterisk" element={<Asterisk/>}/>
         <Route path="/dijkstra" element={<Dijkstra/>}/>

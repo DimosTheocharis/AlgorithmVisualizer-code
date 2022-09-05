@@ -5,7 +5,6 @@ import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
 import Selector from '../../Components/Selector/Selector';
-import Selector2 from '../../Components/Selector2/Selector2';
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { AppContext } from '../../App';
@@ -25,6 +24,7 @@ function Dijkstra() {
         const grids = loadSavedGrids();
         setSavedGrids(grids);  
         createGrid();
+        setIsDisabled(prev => ({...prev, "snapshotButton": true}));
     }, []);
     
 
@@ -105,8 +105,10 @@ function Dijkstra() {
     }
 
 
-    const handleDeleteGrid = (newGrids) => {
+    const handleDeleteGrid = (gridName) => {
       //the function that will be called when the user deletes a grid from the selector
+      const newGrids = [...savedGrids];
+      delete newGrids[gridName];
       setSavedGrids(newGrids); 
       setShowSelector(false); 
     }
@@ -393,15 +395,12 @@ function Dijkstra() {
                       showSelector ? "Close" : "Load grid"
                     }
                   </button>
-                  {
-                    <Selector2 
-                      grids={savedGrids} 
-                      gridsName="grids" 
-                      handleSelectGrid={handleSelectGrid} 
-                      handleDeleteGrid={handleDeleteGrid} 
-                      showSelector={showSelector}
-                    />
-                  }
+                  <Selector
+                    grids={savedGrids} 
+                    handleSelectGrid={handleSelectGrid} 
+                    handleDeleteGrid={handleDeleteGrid} 
+                    showSelector={showSelector}
+                  />
                 </div>
 
               </div>
