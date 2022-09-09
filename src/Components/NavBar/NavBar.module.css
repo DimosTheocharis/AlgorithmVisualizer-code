@@ -22,13 +22,36 @@
     position: relative;
 }
 
-.container {
-    background-color: #281400;
-    height: 60px;
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
+.linkBlue {
+    background-image: linear-gradient(to right, rgb(0,0,100), rgb(0,0,150));
+}
+
+.linkBlue:hover {
+    background-image: linear-gradient(to right, rgb(0,0,150), rgb(0,0,175));
+}
+
+.linkGray {
+    background-image: linear-gradient(to right, rgb(100,100,100), rgb(150,150,150));
+}
+
+.linkGray:hover {
+    background-image: linear-gradient(to right, rgb(150,150,150), rgb(175,175,175));
+}
+
+.linkGreen {
+    background-image: linear-gradient(to right, rgb(0,100,0), rgb(0,150,0));
+}
+
+.linkGreen:hover {
+    background-image: linear-gradient(to right, rgb(0,150,0), rgb(0,175,0));
+}
+
+.linkRed {
+    background-image: linear-gradient(to right, rgb(100,0,0), rgb(150,0,0));
+}
+
+.linkRed:hover {
+    background-image: linear-gradient(to right, rgb(150,0,0), rgb(175,0,0));
 }
 
 .menu {
@@ -67,7 +90,7 @@
     align-items: center;
     background-color: #281400;
     height: 60px;
-    width: 100%;
+    width: 100vw;
 }
 
 .navigationLink {

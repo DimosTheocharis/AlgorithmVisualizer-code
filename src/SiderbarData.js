@@ -3,15 +3,23 @@
 const SiderbarData = [
     {
         title: "Asterisk",
-        path: "/asterisk"
+        path: "/asterisk",
+        class: "linkRed"
     },
     {
         title: "Dijkstra",
-        path: "/dijkstra"
+        path: "/dijkstra",
+        class: "linkGreen"
     },
     {
         title: "Comparison",
-        path: "/comparison"
+        path: "/comparison",
+        class: "linkBlue"
+    },
+    {
+        title: "Instructions",
+        path: "./instructions",
+        class: "linkGray"
     }
 ];
 

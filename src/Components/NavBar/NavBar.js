@@ -37,7 +37,7 @@ function NavBar({displayedScreen, setDisplayedScreen}) {
                     {
                         SiderbarData.map((data, index) => {
                             return (
-                                <li className={NavBarCSS.navigationLink} key={index} onClick={toggleMenu}>
+                                <li className={`${NavBarCSS.navigationLink} ${NavBarCSS[data.class]}`} key={index} onClick={toggleMenu}>
                                     <Link to={data.path} onClick={() => loadFunction(data.title)}>
                                         <p className={NavBarCSS.navigationTitle}>{data.title}</p>
                                     </Link>
