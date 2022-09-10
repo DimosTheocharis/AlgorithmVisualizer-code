@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext,  } from 'react';
 import PriorityQueueAsterisk from '../../Data Structures/PriorityQueueAsterisk';
 import AVL from '../../Data Structures/AVL';
 import AsteriskNode from '../../Data Structures/AsteriskNode';
@@ -272,7 +272,6 @@ function Asterisk() {
 
 
   const Asterisk = async (source, destination) => {
-    console.log(source.getValueG());
     const open = new PriorityQueueAsterisk(); //contains nodes to be evaluated
     const closed = new AVL(); //contains evaluated nodes
     let current, neighbours, newDistance, found, hValue, resolvedValue, changes; //changes will be an array containing the coordinates 

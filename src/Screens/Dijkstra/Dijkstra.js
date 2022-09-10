@@ -251,7 +251,7 @@ function Dijkstra() {
       let current, neighbours, neighbor, newDistance, changes, resolvedValue;
 
       Q.insertNode(source);
-      while (!Q.isEmpty()) {
+      while (!Q.isEmpty() && (algorithmState.current === "pending" || algorithmState.current === "paused")) {
         changes = [];
         current = Q.extractMin();
         changes.push({row: current.getRow(), column: current.getColumn(), status: "evaluated"});
