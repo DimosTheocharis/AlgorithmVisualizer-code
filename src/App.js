@@ -7,6 +7,7 @@ import './App.css';
 import Asterisk from './Screens/Asterisk/Asterisk';
 import Dijkstra from './Screens/Dijkstra/Dijkstra';
 import Comparison from './Screens/Comparison/Comparison';
+import BubbleSort from './Screens/BubbleSort/BubbleSort';
 import Instructions from './Screens/Instructions/Instructions';
 
 const rows = 20;
@@ -239,6 +240,7 @@ function App() {
         <Route exact path="/asterisk" element={<Asterisk/>}/>
         <Route path="/dijkstra" element={<Dijkstra/>}/>
         <Route path="/comparison" element={<Comparison/>}/>
+        <Route path="/bubblesort" element={<BubbleSort/>}/>
         <Route path="/instructions" element={<Instructions/>}/>
         <Route path="*" element={<Asterisk/>}/>
       </Routes>

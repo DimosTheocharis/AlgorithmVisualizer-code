@@ -17,6 +17,11 @@ const SiderbarData = [
         class: "linkBlue"
     },
     {
+        title: "Bubblesort",
+        path: "/bubblesort",
+        class: "linkOrange"
+    },
+    {
         title: "Instructions",
         path: "./instructions",
         class: "linkGray"

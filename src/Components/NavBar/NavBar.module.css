@@ -46,6 +46,14 @@
     background-image: linear-gradient(to right, rgb(0,150,0), rgb(0,175,0));
 }
 
+.linkOrange {
+    background-image: linear-gradient(to right, rgb(153,76,0), rgb(204,102,0));
+}
+
+.linkOrange:hover {
+    background-image: linear-gradient(to right, rgb(204,102,0), rgb(255,128,0));
+}
+
 .linkRed {
     background-image: linear-gradient(to right, rgb(100,0,0), rgb(150,0,0));
 }

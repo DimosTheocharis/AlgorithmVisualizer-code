@@ -1,0 +1,23 @@
+.addIcon {
+    width: 20px;
+    height: 20px;
+    background-color: #002E5B;
+    background-color: #281400;
+}
+
+.addIcon:hover {
+    background-color: #281400;
+    background-color: #002E5B;
+}
+
+.container {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #281400;
+    cursor: pointer;
+}
+
+

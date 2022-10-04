@@ -1,0 +1,39 @@
+.barsContainer {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    column-gap: 30px;
+    border: 1px solid black;
+    margin-top: 30px;
+}
+
+.button {
+    height: 30px;
+    min-width: 50px;
+    cursor: pointer;
+    background-color: #281400;
+    color: rgb(230,230,200);
+}
+
+.button:hover {
+    background-color: rgb(30,15,0);
+}
+
+.container {
+    width: 100vw;
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background-image: linear-gradient(to right, rgb(0,20,40), rgb(0,10,30));
+}
+
+.functionalityContainer {
+    width: 80%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+}
