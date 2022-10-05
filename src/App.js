@@ -110,6 +110,10 @@ function App() {
     setShowGridInput(prev => !prev);
   }
 
+  const handleSlider = (e) => {
+    setAnimationDuration(e.target.value);
+  }
+
 
   const loadSavedGrids = () => {
     const grids = JSON.parse(localStorage.getItem("grids"));
@@ -231,10 +235,10 @@ function App() {
 
   return (
     <AppContext.Provider value={{ algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, 
-      durationInterval, getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, nextBlock, pause, 
-      performGridChanges, rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled,
-      setNextBlock, setSavedGrids, setSelectedGridName, setShowGridInput, setShowSelector, setSnapshots, setSource, showGridInput, showSelector, 
-      snapshots, sleep, source, takeSnapshot, visualizePath}}>
+      durationInterval, getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, handleSlider, isDisabled, loadSavedGrids, 
+      nextBlock, pause, performGridChanges, rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, 
+      setGrid, setIsDisabled, setNextBlock, setSavedGrids, setSelectedGridName, setShowGridInput, setShowSelector, setSnapshots, setSource, 
+      showGridInput, showSelector, snapshots, sleep, source, takeSnapshot, visualizePath}}>
       <NavBar displayedScreen={displayedScreen} setDisplayedScreen={setDisplayedScreen}/>
       <Routes>
         <Route exact path="/asterisk" element={<Asterisk/>}/>

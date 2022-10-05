@@ -2,7 +2,7 @@ class BarNode {
     constructor(value, index) {
         this._value = value;
         this._index = index;
-        this._status = "unchecked";
+        this._status = "unexamined";
     }
     
     getValue() {
@@ -13,12 +13,20 @@ class BarNode {
         return this._index;
     }
 
+    getStatus() {
+        return this._status;
+    }
+
     setValue(value) {
         this._value = value;
     }
 
     setIndex(index) {
         this._index = index;
+    }
+
+    setStatus(status) {
+        this._status = status;
     }
 }
 

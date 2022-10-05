@@ -6,6 +6,7 @@ import Block from '../../Components/Block/Block';
 import Settings from '../../Components/Settings/Settings';
 import Timer from '../../Components/Timer/Timer';
 import Selector from '../../Components/Selector/Selector';
+import Slider from '../../Components/Slider/Slider';
 import { AppContext } from '../../App';
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
@@ -184,11 +185,6 @@ function Asterisk() {
     setDisabled(false); 
     algorithmState.current = "unbegun"; 
     setNextBlock("blocked"); 
-  }
-
-
-  const handleSlider = (e) => {
-    setAnimationDuration(e.target.value);
   }
 
 
@@ -383,18 +379,7 @@ function Asterisk() {
           >
             {algorithmState.current === "paused" ? "Resume" : "Pause"}
           </button>
-          <div className='sliderContainer'>
-            <input 
-              type="range" 
-              min={0} 
-              max={5000} 
-              value={animationDuration} 
-              className={`${styles.slider} ${algorithmState.current !== "unbegun" && algorithmState.current !== "finished" ? `${styles.sliderDisabled}` : `${styles.sliderEnabled}`}`} 
-              onChange={handleSlider} 
-              disabled={algorithmState.current !== "unbegun" && algorithmState.current !== "finished"}
-            />
-            <p className={styles.sliderText}>Animation duration: {animationDuration} milliseconds</p>
-          </div>
+          <Slider/>
           <button 
             onClick={handleResetButton} 
             className={`${styles.button} ${disabled ? `${styles.disabled}` : null}`} 

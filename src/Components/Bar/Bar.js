@@ -50,7 +50,7 @@ function Bar({ bar, deleteBar, editBoard }) {
                 <>
                     <div className={BarCSS.resizer} ref={resizerRef}/>
                     <div className={BarCSS.deleteButton} onClick={() => deleteBar(bar.getIndex())}>
-                            <p className={BarCSS.deleteButtonText}>X</p>
+                        <p className={BarCSS.deleteButtonText}>X</p>
                     </div>
                 </>
             )
@@ -60,10 +60,9 @@ function Bar({ bar, deleteBar, editBoard }) {
     }
 
     return (
-        <div className={BarCSS.container} style={{height: `${bar.getValue()}px`}} ref={resizableRef}>
+        <div className={`${BarCSS.container} ${BarCSS[bar.getStatus()]}`} style={{height: `${bar.getValue()}px`}} ref={resizableRef}>
             <p>{bar.getValue()}</p>
             {determineBarTools()}
-            
         </div>
     )
 }
