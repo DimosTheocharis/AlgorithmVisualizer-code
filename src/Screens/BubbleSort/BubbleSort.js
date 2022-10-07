@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Bar from '../../Components/Bar/Bar';
 import Slider from '../../Components/Slider/Slider';
 import AddBarButton from '../../Components/AddBarButton/AddBarButton';
+import Selector from '../../Components/Selector/Selector';
 import BarNode from '../../Data Structures/BarNode';
 import { AppContext } from '../../App';
 import styles from './BubbleSort.module.css';
@@ -9,26 +10,32 @@ import styles from './BubbleSort.module.css';
 
 function BubbleSort() {
     const { algorithmState, animationDuration, sleep } = useContext(AppContext);
-    const [board, setBoard] = useState(null);
+    const [board, setBoard] = useState(null); //saves the bars as objects
+    const [barHeights, setBarHeights] = useState(null); //saves the heights of the bars. It's used when the user wants to reset the board to the previous state
     const [editBoard, setEditBoard] = useState(false); //whether or not the user wants to add/delete/resize a bar
+    const [showSelector, setShowSelector] = useState(false);
+    const [isDisabled, setIsDisabled] = useState({ //whether or not some buttons are disabled 
+        "clearButton": false,
+        "editButton": false,
+        "operationButton": false,
+        "resetButton": true,
+        "shuffleButton": false,
+        "slider": false
+        
+    })
 
     useEffect(() => {
         const customHeights = [120,70,90,50]; //70,120,80,50,60,50,70,50,200
-        const newBoard = [];
-        customHeights.forEach((height, index) => {
-            newBoard.push(
-                new BarNode(height, index)
-            );
-        })
-        setBoard(newBoard);
+        createBoard(customHeights);
     },[])
 
     
     const addBar = (index) => {
         let i;
         const newBoard = [...board];
-        // the height of the new bar will be the value of the previous bar (at the left) or the value of the first of index is 0
-        const newHeight = index === 0 ? board[0].getValue() : board[index - 1].getValue();
+        //The height of the new bar will be the value of the previous bar (at the left) or the value of the first of index is 0
+        //If there is no bar, then the new bar will have a default height of 50px
+        const newHeight = index === 0 ? (board.length > 0 ? board[0].getValue() : 50 ): board[index - 1].getValue();
         newBoard.splice(index, 0, new BarNode(newHeight, index)); //add the bar to the board
         for (i = index + 1; i < newBoard.length; i++) { //change the indexes of the bars at the right
             newBoard[i].setIndex(newBoard[i].getIndex() + 1);
@@ -36,8 +43,21 @@ function BubbleSort() {
         setBoard(newBoard);
     }
 
+    const createBoard = (heights) => {
+        //takes an array of integers as parameter and creates the board with a bar for each height
+        const newBoard = [];
+        heights.forEach((height, index) => {
+            newBoard.push(
+                new BarNode(height, index)
+            );
+        })
+        setBoard(newBoard);
+    }
+
 
     const determineVisibleContent = () => {
+        //if the user has clicked the edit button, then the bars and among them some buttons to add more bars will be displayed
+        //otherwise, only the bars will be displayed
         let elements = [];
         const bars = getBars();
         if (editBoard) {
@@ -62,6 +82,16 @@ function BubbleSort() {
             newBoard[i].setIndex(newBoard[i].getIndex() - 1);
         }
         setBoard(newBoard);
+    }
+
+    const extractHeights = (board) => {
+        //this function creates and return an array of the heights of the bars. The result is saved at the variable barHeights
+        const heights = [];
+        let i;
+        for (i = 0; i < board.length; i++) {
+            heights.push(board[i].getValue());
+        }
+        return heights;
     }
 
     
@@ -99,11 +129,64 @@ function BubbleSort() {
         return bars;
     }
 
+    const handleAlgorithmTermination = () => {
+        //this function is called when the algorithm ends or is stopped by the user
+        algorithmState.current = "finished";
+        setIsDisabled(prev => {
+            return {...prev, "operationButton": true, "resetButton": false}
+        })
+    }
+
+    const handleClearButton = () => {
+        //this function is called when the user clicks the button Clear. It removes all bars from the board.
+        createBoard([]);
+    }
+
+    const handleEditButton = () => {
+        //this function is called when the user clickes the button Edit.
+        setEditBoard(prev => !prev);
+        let operationButtonDisability = !editBoard; //if board is going to be edited we want the user not to be able to start the algorithm
+        setIsDisabled(prev => {
+            return {...prev, "operationButton": operationButtonDisability};
+        })
+    }
+
     const handleOperationButton = () => {
+        //this function is called when the user clickes the button Start/stop.
         if (algorithmState.current === "unbegun") {
             algorithmState.current = "pending";
+            setBarHeights(extractHeights(board)); //save the present state of the board
+            setIsDisabled(prev => {
+                return {...prev, "clearButton": true, "editButton": true, "resetButton": true, "shuffleButton": true, "slider": true}
+            })
             BubbleSort();
+        } else {
+            algorithmState.current = "finished";
         }
+    }
+
+    const handleResetButton = () => {
+        //resets the board to the previous state ie to the particular sequence of the bars before the start button got clicked
+        algorithmState.current = "unbegun";
+        createBoard(barHeights);
+        setIsDisabled({"editButton": false, "operationButton": false, "resetButton": true, "shuffleButton": false, "slider": false});
+    }
+
+    const handleShuffleButton = () => {
+        //this function is called when the user clickes the button Shuffle. It randomly changes the position of the bars.
+        const currentBarHeights = extractHeights(board);
+        const newBarHeights = []; //the array of heights for the new bars. (same bars but with different sequence)
+        let i, length, randomNumber, extractedItem;
+        length = currentBarHeights.length;
+        i = 0;
+        //one by one randomly remove heights from the currentBarHeights and push them to the newBarHeights
+        while (i < length) {
+            randomNumber = Math.floor(Math.random() * currentBarHeights.length);
+            extractedItem = currentBarHeights.splice(randomNumber, 1)[0]; //splice returns an array with the extracted items
+            newBarHeights.push(extractedItem);
+            i += 1;
+        }
+        createBoard(newBarHeights);
     }
 
     const performBoardChanges = (changes) => {
@@ -115,13 +198,6 @@ function BubbleSort() {
         setBoard(newBoard);
     }
 
-    const swapBars = (indexA, indexB) => {
-
-    }
-
-    const toggleEditButton = () => {
-        setEditBoard(prev => !prev);
-    }
 
 
     const BubbleSort = async () => {
@@ -131,7 +207,6 @@ function BubbleSort() {
             stop = true;
             for (j = board.length - 1; j >= i; j--) {
                 changes = [];
-                
                 changes.push({"index": j, "status": "examining", "value": board[j].getValue()});
                 changes.push({"index": j-1, "status": "examining", "value": board[j-1].getValue()});
                 performBoardChanges(changes);
@@ -152,17 +227,28 @@ function BubbleSort() {
                     performBoardChanges(changes);
                     resolvedValue = await sleep(animationDuration);
                 }
+
+                if (algorithmState.current === "finished") {
+                    handleAlgorithmTermination();
+                    return 0;
+                }
+
             }
             changes = [];
             changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
             performBoardChanges(changes);
             resolvedValue = await sleep(animationDuration);
         }
+        //if bubbleSort ends sooner than expected, ie it determined that bars are already sorted, then the algorithm will let at the right
+        //side of the board some bars with status "examining" even though they are already placed. For that reason, set them placed.
         changes = [];
-        changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
+        while (i <= board.length) {
+            changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
+            i += 1;
+        }
         performBoardChanges(changes);
         resolvedValue = await sleep(animationDuration);
-        algorithmState.current = "finished";
+        handleAlgorithmTermination();
     }
 
     //determine the color of the operator button (start/stop button) here to avoid confusion at the the render block
@@ -170,24 +256,70 @@ function BubbleSort() {
 
     return (
         <div className={styles.container}>
-            <section className={styles.barsContainer} style={{columnGap: `${editBoard ? 15 : 30}px`}}>
+            <section className={styles.board} style={{columnGap: `${editBoard ? 15 : 30}px`}}>
                 {determineVisibleContent()}
             </section>
             <section className={styles.functionalityContainer}>
                 <button 
-                    className={styles.button} 
-                    onClick={toggleEditButton}
+                    onClick={handleEditButton}
+                    className={`${styles.button} ${isDisabled["editButton"] ? styles.disabled : null}`} 
+                    disabled={isDisabled["editButton"]}
                 >
                     {editBoard ? "Finish" : "Edit"}
                 </button>
                 <button 
                     onClick={handleOperationButton} 
-                    className={`${styles.button} ${(algorithmState.current === "finished" || algorithmState.current === "paused") ? `${styles.disabled}` : `${styles[operatorButtonClassName]}`}`} 
-                    disabled={algorithmState.current === "finished" || algorithmState.current === "paused"}
+                    className={`${styles.button} ${isDisabled["operationButton"] ? `${styles.disabled}` : `${styles[operatorButtonClassName]}`}`} 
+                    disabled={isDisabled["operationButton"]}
                 >
                     {algorithmState.current === "pending" ? "Stop" : "Start"}
                 </button>
                 <Slider/>
+                <button 
+                    onClick={handleResetButton}
+                    className={`${styles.button} ${isDisabled["resetButton"] ? styles.disabled : null}`}
+                    disabled={isDisabled["resetButton"]}
+                >
+                    Reset
+                </button>
+                <button 
+                    onClick={handleClearButton}
+                    className={`${styles.button} ${isDisabled["clearButton"] ? styles.disabled : null}`}
+                    disabled={isDisabled["clearButton"]}
+                >
+                    Clear
+                </button>
+                <button
+                    onClick={handleShuffleButton}
+                    className={`${styles.button} ${isDisabled["shuffleButton"] ? styles.disabled : null}`}
+                    disabled={isDisabled["shuffleButton"]}
+                >
+                    Shuffle
+                </button>
+                {
+                    /*
+                    
+                    <div className={styles.loadGridContainer}>
+                    <button
+                        className={`${styles.button} ${isDisabled["loadButton"] ? `${styles.disabled}` : null}`}
+                        disabled={isDisabled["loadButton"]}
+                        onClick={handleLoadButton}
+                    >
+                        {
+                        showSelector ? "Close" : "Load grid"
+                        }
+                    </button>
+                    <Selector
+                        grids={savedGrids} 
+                        gridsName="grids" 
+                        handleSelectGrid={handleSelectGrid} 
+                        handleDeleteGrid={handleDeleteGrid} 
+                        showSelector={showSelector}
+                    /> 
+                </div>
+                    
+                    */
+                }
             </section>
         </div>
     )

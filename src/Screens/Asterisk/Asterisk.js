@@ -434,8 +434,7 @@ function Asterisk() {
                 handleSelectGrid={handleSelectGrid} 
                 handleDeleteGrid={handleDeleteGrid} 
                 showSelector={showSelector}
-              />
-              
+              /> 
             </div>
 
           </div>
