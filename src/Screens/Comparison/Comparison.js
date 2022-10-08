@@ -141,13 +141,15 @@ function Comparison() {
                 </div>           
             </div>
             <div className={ComparisonCSS.loadGridContainer}>
-                <Selector
-                  grids={savedGrids} 
-                  gridsName="grids" 
-                  handleSelectGrid={handleSelectGrid} 
-                  handleDeleteGrid={handleDeleteGrid} 
-                  showSelector={true}
-                />
+            <Selector
+                defaultMessage="Select a grid"
+                elements={savedGrids} 
+                handleSelectElement={handleSelectGrid} 
+                handleDeleteElement={handleDeleteGrid} 
+                selectedElementName={selectedGridName}
+                setSelectedElementName={setSelectedGridName}
+                showSelector={true}
+              /> 
             </div>
         </div>
     )

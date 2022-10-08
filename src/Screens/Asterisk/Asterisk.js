@@ -16,8 +16,8 @@ import styles from './Asterisk.module.css';
 function Asterisk() {
   const { algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, durationInterval, getStatus, 
           grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, nextBlock, pause, performGridChanges, rows, 
-          savedGrids, saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, setSavedGrids, 
-          setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
+          savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
+          setSavedGrids, setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
   const [showSettings, setShowSettings] = useState(false);
   //the next 3 values are for the nodes of the algorithm. 
   const [showValueG, setShowValueG] = useState(false);
@@ -120,10 +120,11 @@ function Asterisk() {
 
   const handleDeleteGrid = (gridName) => {
     //the function that will be called when the user deletes a grid from the selector
-    const newGrids = [...savedGrids];
+    const newGrids = {...savedGrids};
     delete newGrids[gridName];
     setSavedGrids(newGrids); 
     setShowSelector(false); 
+    localStorage.setItem("grids", JSON.stringify(newGrids));
   }
 
 
@@ -429,10 +430,12 @@ function Asterisk() {
                 }
               </button>
               <Selector
-                grids={savedGrids} 
-                gridsName="grids" 
-                handleSelectGrid={handleSelectGrid} 
-                handleDeleteGrid={handleDeleteGrid} 
+                defaultMessage="Select a grid"
+                elements={savedGrids} 
+                handleSelectElement={handleSelectGrid} 
+                handleDeleteElement={handleDeleteGrid} 
+                selectedElementName={selectedGridName}
+                setSelectedElementName={setSelectedGridName}
                 showSelector={showSelector}
               /> 
             </div>

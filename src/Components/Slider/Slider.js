@@ -10,6 +10,7 @@ function Slider() {
               type="range" 
               min={0} 
               max={5000} 
+              step={250}
               value={animationDuration} 
               className={`${SliderCSS.slider} ${algorithmState.current !== "unbegun" && algorithmState.current !== "finished" ? `${SliderCSS.sliderDisabled}` : `${SliderCSS.sliderEnabled}`}`} 
               onChange={handleSlider} 

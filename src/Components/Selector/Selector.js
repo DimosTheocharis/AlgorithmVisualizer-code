@@ -1,13 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
-import { AppContext } from '../../App';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import SelectorCSS from './Selector.module.css';
 
-function Selector({ grids, handleSelectGrid, handleDeleteGrid, showSelector}) {
+function Selector({ defaultMessage, elements, handleSelectElement, handleDeleteElement, selectedElementName, setSelectedElementName, showSelector}) {
     //this component is used in 2 different places, in an algorithm screen like Asterisk, and in Comparison screen with different type of grids
     //and purpose. Thus, there is a need to call different functions when a grid is saved and deleted.
-    const { selectedGridName, setSelectedGridName, } = useContext(AppContext);
     const [expand, setExpand] = useState(false);
 
     const toggleSelector = () => {
@@ -17,21 +15,21 @@ function Selector({ grids, handleSelectGrid, handleDeleteGrid, showSelector}) {
     const selectGrid = (gridName) => {
         //takes the name of the selected grid, loads the grid and prepares the algorithm for running
         setExpand(false);
-        setSelectedGridName(gridName);
-        handleSelectGrid(gridName)
+        setSelectedElementName(gridName);
+        handleSelectElement(gridName)
     }
 
     const deleteGrid = (gridName) => {
         //deletes the name of the selected grid
         setExpand(false); 
-        handleDeleteGrid(gridName);
+        handleDeleteElement(gridName);
     }
 
     return (
         <div className={`${SelectorCSS.container} ${showSelector ? null : SelectorCSS.containerHidden}`}>
             <div className={SelectorCSS.selectorContainer}>
                 <div className={SelectorCSS.selectionContainer}>
-                    <p className={SelectorCSS.selectionMessage}>{selectedGridName === "" ? "Select a grid" : selectedGridName}</p>
+                    <p className={SelectorCSS.selectionMessage}>{selectedElementName === "" ? defaultMessage: selectedElementName}</p>
                 </div>
                 <div className={SelectorCSS.button} onClick={toggleSelector}>
                     {
@@ -46,7 +44,7 @@ function Selector({ grids, handleSelectGrid, handleDeleteGrid, showSelector}) {
                 expand ? 
                     <div className={SelectorCSS.valuesContainer}>
                         {
-                            Object.keys(grids).map((name, index) => {
+                            Object.keys(elements).map((name, index) => {
                                 return (
                                     <div className={SelectorCSS.valueItem} key={index}>
                                         <div className={SelectorCSS.valueContainer} onClick={() => selectGrid(name)}>

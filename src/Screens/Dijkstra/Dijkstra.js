@@ -15,8 +15,8 @@ import styles from './Dijkstra.module.css';
 function Dijkstra() {
     const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, destination, disabled, durationInterval, 
            getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids,nextBlock, pause, 
-           performGridChanges, savedGrids, saveGrid, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
-           setSavedGrids, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
+           performGridChanges, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
+           setSavedGrids, setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
     const [showSettings, setShowSettings] = useState(false);
     const [showValueD, setShowValueD] = useState(false);
     const [duration, setDuration] = useState(0); //the running time of the algorithm
@@ -75,6 +75,7 @@ function Dijkstra() {
       setSource(null);
       setDestination(null);
       setNextBlock("source");
+      setSelectedGridName("");
       algorithmState.current = "unbegun";
     }
     
@@ -108,10 +109,11 @@ function Dijkstra() {
 
     const handleDeleteGrid = (gridName) => {
       //the function that will be called when the user deletes a grid from the selector
-      const newGrids = [...savedGrids];
+      const newGrids = {...savedGrids};
       delete newGrids[gridName];
       setSavedGrids(newGrids); 
       setShowSelector(false); 
+      localStorage.setItem("grids", JSON.stringify(newGrids));
     }
 
 
@@ -390,11 +392,14 @@ function Dijkstra() {
                     }
                   </button>
                   <Selector
-                    grids={savedGrids} 
-                    handleSelectGrid={handleSelectGrid} 
-                    handleDeleteGrid={handleDeleteGrid} 
+                    defaultMessage="Select a grid"
+                    elements={savedGrids} 
+                    handleSelectElement={handleSelectGrid} 
+                    handleDeleteElement={handleDeleteGrid} 
+                    selectedElementName={selectedGridName}
+                    setSelectedElementName={setSelectedGridName}
                     showSelector={showSelector}
-                  />
+                  /> 
                 </div>
 
               </div>
