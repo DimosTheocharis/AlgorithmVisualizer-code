@@ -62,6 +62,14 @@
     background-image: linear-gradient(to right, rgb(150,0,0), rgb(175,0,0));
 }
 
+.linkYellow {
+    background-image: linear-gradient(to right, rgb(153,153,0), rgb(204,204,0));
+}
+
+.linkYellow:hover {
+    background-image: linear-gradient(to right, rgb(204,204,0), rgb(255,255,0));
+}
+
 .menu {
     position: fixed;
     height: 100vh;

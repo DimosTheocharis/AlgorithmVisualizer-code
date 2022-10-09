@@ -45,6 +45,22 @@ function BubbleSort() {
     },[])
 
     
+    const myArray = [50,30,20,60,10];
+    console.log("Before sorting: ", myArray);
+    let i,j, minIndex, temp;
+    for (i = 0; i < myArray.length - 1; i++) {
+        minIndex = i;
+        for (j = i + 1; j < myArray.length; j++) {
+            if (myArray[minIndex] >  myArray[j]) {
+                minIndex = j;
+            }
+        }
+        temp = myArray[i];
+        myArray[i] = myArray[minIndex];
+        myArray[minIndex] = temp;
+    }
+
+    
     const addBar = (index) => {
         let i;
         const newBoard = [...board];

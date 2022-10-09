@@ -35,8 +35,16 @@
     background-color: rgb(255,127,0);
 }
 
+.minimum {
+    background-color: rgb(100,0,0);
+}
+
 .placed {
     background-color: rgb(0,100,0);
+}
+
+.prePlaced {
+    background-color: rgb(200,200,0);
 }
 
 .resizer {

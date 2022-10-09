@@ -8,10 +8,10 @@ import BarNode from '../../Data Structures/BarNode';
 import { AppContext } from '../../App';
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
-import styles from './SortingTemplate.module.css';
+import styles from './SelectionSort.module.css';
 
 
-function SortingTemplate({algorithm}) {
+function SelectionSort() {
     const { algorithmState, animationDuration, handleLoadButton, setShowSelector, showSelector, sleep } = useContext(AppContext);
     const [board, setBoard] = useState(null); //saves the bars as objects
     const [barHeights, setBarHeights] = useState(null); //saves the heights of the bars. It's used when the user wants to reset the board to the previous state
@@ -43,6 +43,22 @@ function SortingTemplate({algorithm}) {
         createBoard(customHeights);
         
     },[])
+
+    
+    const myArray = [50,30,20,60,10];
+    console.log("Before sorting: ", myArray);
+    let i,j, minIndex, temp;
+    for (i = 0; i < myArray.length - 1; i++) {
+        minIndex = i;
+        for (j = i + 1; j < myArray.length; j++) {
+            if (myArray[minIndex] >  myArray[j]) {
+                minIndex = j;
+            }
+        }
+        temp = myArray[i];
+        myArray[i] = myArray[minIndex];
+        myArray[minIndex] = temp;
+    }
 
     
     const addBar = (index) => {
@@ -192,7 +208,7 @@ function SortingTemplate({algorithm}) {
                 return {...prev, "clearButton": true, "editButton": true, "loadButton": true, "resetButton": true, 
                                  "saveButton": true, "shuffleButton": true, "slider": true}
             })
-            algorithm();
+            SelectionSort();
         } else {
             algorithmState.current = "finished";
         }
@@ -287,30 +303,30 @@ function SortingTemplate({algorithm}) {
 
 
 
-    const BubbleSort = async () => {
-        let i,j, resolvedValue, changes;
-        let stop = false;
-        for (i = 1; i < board.length && !stop; i++) {
-            stop = true;
-            for (j = board.length - 1; j >= i; j--) {
+    const SelectionSort = async () => {
+        let i, j, changes, minIndex, resolvedValue;
+        for (i = 0; i < board.length - 1; i++) {
+            minIndex = i;
+            changes = [];
+            changes.push({"index": i, "status": "minimum", "value": board[i].getValue()});
+            performBoardChanges(changes);
+            resolvedValue = await sleep(animationDuration);
+
+            for (j = i + 1; j < board.length; j++) {
                 changes = [];
                 changes.push({"index": j, "status": "examining", "value": board[j].getValue()});
-                changes.push({"index": j-1, "status": "examining", "value": board[j-1].getValue()});
                 performBoardChanges(changes);
                 resolvedValue = await sleep(animationDuration);
-
-                changes = [];
-                if (board[j].getValue() < board[j-1].getValue()) {
-                    //if items at j and j-1 indexes are at wrong places, then swap them and set their status as unexamined
-                    stop = false;
-                    changes.push({"index": j, "status": "unexamined", "value": board[j-1].getValue()});
-                    changes.push({"index": j-1, "status": "unexamined", "value": board[j].getValue()});
+                if (board[minIndex].getValue() > board[j].getValue()) {
+                    changes = [];
+                    changes.push({"index": j, "status": "minimum", "value": board[j].getValue()});
+                    changes.push({"index": minIndex, "status": "unexamined", "value": board[minIndex].getValue()});
                     performBoardChanges(changes);
                     resolvedValue = await sleep(animationDuration);
+                    minIndex = j;
                 } else {
-                    //if items at j and j-1 indexes are at correct places, just set their status as unexamined
+                    changes = [];
                     changes.push({"index": j, "status": "unexamined", "value": board[j].getValue()});
-                    changes.push({"index": j-1, "status": "unexamined", "value": board[j-1].getValue()});
                     performBoardChanges(changes);
                     resolvedValue = await sleep(animationDuration);
                 }
@@ -319,20 +335,23 @@ function SortingTemplate({algorithm}) {
                     handleAlgorithmTermination();
                     return 0;
                 }
-
             }
             changes = [];
-            changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
+            changes.push({"index": i, "status": "prePlaced", "value": board[i].getValue()});
+            performBoardChanges(changes);
+            resolvedValue = await sleep(animationDuration > 1000 ? animationDuration : 1000);
+            //swap the current minimum bar with the bar at the index i
+            changes = [];
+            changes.push({"index": minIndex, "status": "unexamined", "value": board[i].getValue()});
+            changes.push({"index": i, "status": "placed", "value": board[minIndex].getValue()});
             performBoardChanges(changes);
             resolvedValue = await sleep(animationDuration);
+
         }
-        //if bubbleSort ends sooner than expected, ie it determined that bars are already sorted, then the algorithm will let at the right
-        //side of the board some bars with status "examining" even though they are already placed. For that reason, set them placed.
+
+        //set the right-most bar of the board as placed. It is already at the correct spot
         changes = [];
-        while (i <= board.length) {
-            changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
-            i += 1;
-        }
+        changes.push({"index": i, "status": "placed", "value": board[i].getValue()});
         performBoardChanges(changes);
         resolvedValue = await sleep(animationDuration);
         handleAlgorithmTermination();
@@ -441,4 +460,4 @@ function SortingTemplate({algorithm}) {
     )
 }
 
-export default BubbleSort;
+export default SelectionSort;

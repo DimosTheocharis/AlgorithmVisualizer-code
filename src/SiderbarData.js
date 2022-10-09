@@ -22,6 +22,11 @@ const SiderbarData = [
         class: "linkOrange"
     },
     {
+        title: "Selectionsort",
+        path: "/selectionsort",
+        class: "linkYellow"
+    },
+    {
         title: "Instructions",
         path: "./instructions",
         class: "linkGray"
