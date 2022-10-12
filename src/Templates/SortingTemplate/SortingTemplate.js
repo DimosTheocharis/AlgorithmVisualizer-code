@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import Bar from '../../Components/Bar/Bar';
 import Slider from '../../Components/Slider/Slider';
 import AddBarButton from '../../Components/AddBarButton/AddBarButton';
@@ -10,39 +10,32 @@ import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
 import styles from './SortingTemplate.module.css';
 
+const myArray = [9, 5, 1, 4, 3];
+console.log("Before sorting: ", myArray);
+let j,i,key;
+for (i = 1; i < myArray.length; i++) {
+    key = myArray[i];
+    j = i - 1;
+    while (j >= 0 && myArray[j] > key) {
+        myArray[j+1] = myArray[j];
+        j -= 1;
+    }
+    
+    myArray[j + 1] = key;
+}
 
-function SortingTemplate({algorithm}) {
-    const { algorithmState, animationDuration, handleLoadButton, setShowSelector, showSelector, sleep } = useContext(AppContext);
-    const [board, setBoard] = useState(null); //saves the bars as objects
+console.log("After sorting: ", myArray);
+
+
+function SortingTemplate({algorithm, algorithmState, board, isDisabled, createBoard, savedBoards, setBoard, setIsDisabled, setSavedBoards}) {
+    const { handleLoadButton, setShowSelector, showSelector } = useContext(AppContext);
     const [barHeights, setBarHeights] = useState(null); //saves the heights of the bars. It's used when the user wants to reset the board to the previous state
     const [editBoard, setEditBoard] = useState(false); //whether or not the user wants to add/delete/resize a bar
-    const [savedBoards, setSavedBoards] = useState(false);
     const [showBoardInput, setShowBoardInput] = useState(false);
     const boardNameInputRef = useRef(null); //it is used when the arrow button is clicked, so as to get access to the name of the board the user wants to save
     const [selectedBoardName, setSelectedBoardName] = useState(""); //the name of the saved board that got selected from the selector. 
     const [showHeight, setShowHeight] = useState(true);
     const [showSettings, setShowSettings] = useState(false);
-    const [isDisabled, setIsDisabled] = useState({ //whether or not some buttons are disabled 
-        "clearButton": false,
-        "editButton": false,
-        "loadButton": false,
-        "operationButton": false,
-        "resetButton": true,
-        "saveButton": false,
-        "shuffleButton": false,
-        "slider": false    
-    })
-
-    useEffect(() => {
-        //load saved boards
-        const boards = loadSavedBoards();
-        setSavedBoards(boards);
-
-        //create a default board
-        const customHeights = [120,70,90,50]; //70,120,80,50,60,50,70,50,200
-        createBoard(customHeights);
-        
-    },[])
 
     
     const addBar = (index) => {
@@ -55,17 +48,6 @@ function SortingTemplate({algorithm}) {
         for (i = index + 1; i < newBoard.length; i++) { //change the indexes of the bars at the right
             newBoard[i].setIndex(newBoard[i].getIndex() + 1);
         }
-        setBoard(newBoard);
-    }
-
-    const createBoard = (heights) => {
-        //takes an array of integers as parameter and creates the board with a bar for each height
-        const newBoard = [];
-        heights.forEach((height, index) => {
-            newBoard.push(
-                new BarNode(height, index)
-            );
-        })
         setBoard(newBoard);
     }
 
@@ -143,14 +125,6 @@ function SortingTemplate({algorithm}) {
             )
         })
         return bars;
-    }
-
-    const handleAlgorithmTermination = () => {
-        //this function is called when the algorithm ends or is stopped by the user
-        algorithmState.current = "finished";
-        setIsDisabled(prev => {
-            return {...prev, "loadButton": false, "operationButton": true, "resetButton": false}
-        })
     }
 
     const handleClearButton = () => {
@@ -241,20 +215,6 @@ function SortingTemplate({algorithm}) {
         setSelectedBoardName("");
     }
 
-    const loadSavedBoards = () => {
-        const boards = JSON.parse(localStorage.getItem("boards"));
-        return boards === null ? {} : boards;
-      }
-
-    const performBoardChanges = (changes) => {
-        const newBoard = [...board];
-        changes.forEach(change => {
-            newBoard[change.index].setStatus(change.status);
-            newBoard[change.index].setValue(change.value);
-        })
-        setBoard(newBoard);
-    }
-
     const saveBoard = () => {
         //this function gets called when the user clicks the arrow button after clicked the save button.
         //It saves an array with the heights of the board's bars to the localStorage
@@ -283,59 +243,6 @@ function SortingTemplate({algorithm}) {
 
     const toggleSettings = () => {
         setShowSettings(prev => !prev);
-    }
-
-
-
-    const BubbleSort = async () => {
-        let i,j, resolvedValue, changes;
-        let stop = false;
-        for (i = 1; i < board.length && !stop; i++) {
-            stop = true;
-            for (j = board.length - 1; j >= i; j--) {
-                changes = [];
-                changes.push({"index": j, "status": "examining", "value": board[j].getValue()});
-                changes.push({"index": j-1, "status": "examining", "value": board[j-1].getValue()});
-                performBoardChanges(changes);
-                resolvedValue = await sleep(animationDuration);
-
-                changes = [];
-                if (board[j].getValue() < board[j-1].getValue()) {
-                    //if items at j and j-1 indexes are at wrong places, then swap them and set their status as unexamined
-                    stop = false;
-                    changes.push({"index": j, "status": "unexamined", "value": board[j-1].getValue()});
-                    changes.push({"index": j-1, "status": "unexamined", "value": board[j].getValue()});
-                    performBoardChanges(changes);
-                    resolvedValue = await sleep(animationDuration);
-                } else {
-                    //if items at j and j-1 indexes are at correct places, just set their status as unexamined
-                    changes.push({"index": j, "status": "unexamined", "value": board[j].getValue()});
-                    changes.push({"index": j-1, "status": "unexamined", "value": board[j-1].getValue()});
-                    performBoardChanges(changes);
-                    resolvedValue = await sleep(animationDuration);
-                }
-
-                if (algorithmState.current === "finished") {
-                    handleAlgorithmTermination();
-                    return 0;
-                }
-
-            }
-            changes = [];
-            changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
-            performBoardChanges(changes);
-            resolvedValue = await sleep(animationDuration);
-        }
-        //if bubbleSort ends sooner than expected, ie it determined that bars are already sorted, then the algorithm will let at the right
-        //side of the board some bars with status "examining" even though they are already placed. For that reason, set them placed.
-        changes = [];
-        while (i <= board.length) {
-            changes.push({"index": i-1, "status": "placed", "value": board[i-1].getValue()});
-            i += 1;
-        }
-        performBoardChanges(changes);
-        resolvedValue = await sleep(animationDuration);
-        handleAlgorithmTermination();
     }
 
     //object that holds the information about the settings section of the Asterisk screen
@@ -441,4 +348,4 @@ function SortingTemplate({algorithm}) {
     )
 }
 
-export default BubbleSort;
+export default SortingTemplate;

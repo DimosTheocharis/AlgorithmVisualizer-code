@@ -302,61 +302,6 @@ function SelectionSort() {
     }
 
 
-
-    const SelectionSort = async () => {
-        let i, j, changes, minIndex, resolvedValue;
-        for (i = 0; i < board.length - 1; i++) {
-            minIndex = i;
-            changes = [];
-            changes.push({"index": i, "status": "minimum", "value": board[i].getValue()});
-            performBoardChanges(changes);
-            resolvedValue = await sleep(animationDuration);
-
-            for (j = i + 1; j < board.length; j++) {
-                changes = [];
-                changes.push({"index": j, "status": "examining", "value": board[j].getValue()});
-                performBoardChanges(changes);
-                resolvedValue = await sleep(animationDuration);
-                if (board[minIndex].getValue() > board[j].getValue()) {
-                    changes = [];
-                    changes.push({"index": j, "status": "minimum", "value": board[j].getValue()});
-                    changes.push({"index": minIndex, "status": "unexamined", "value": board[minIndex].getValue()});
-                    performBoardChanges(changes);
-                    resolvedValue = await sleep(animationDuration);
-                    minIndex = j;
-                } else {
-                    changes = [];
-                    changes.push({"index": j, "status": "unexamined", "value": board[j].getValue()});
-                    performBoardChanges(changes);
-                    resolvedValue = await sleep(animationDuration);
-                }
-
-                if (algorithmState.current === "finished") {
-                    handleAlgorithmTermination();
-                    return 0;
-                }
-            }
-            changes = [];
-            changes.push({"index": i, "status": "prePlaced", "value": board[i].getValue()});
-            performBoardChanges(changes);
-            resolvedValue = await sleep(animationDuration > 1000 ? animationDuration : 1000);
-            //swap the current minimum bar with the bar at the index i
-            changes = [];
-            changes.push({"index": minIndex, "status": "unexamined", "value": board[i].getValue()});
-            changes.push({"index": i, "status": "placed", "value": board[minIndex].getValue()});
-            performBoardChanges(changes);
-            resolvedValue = await sleep(animationDuration);
-
-        }
-
-        //set the right-most bar of the board as placed. It is already at the correct spot
-        changes = [];
-        changes.push({"index": i, "status": "placed", "value": board[i].getValue()});
-        performBoardChanges(changes);
-        resolvedValue = await sleep(animationDuration);
-        handleAlgorithmTermination();
-    }
-
     //object that holds the information about the settings section of the Asterisk screen
     const settings = [
         {title: "Show height", toggleFunction: toggleHeight, enabled: showHeight},

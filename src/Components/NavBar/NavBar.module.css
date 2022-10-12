@@ -54,6 +54,14 @@
     background-image: linear-gradient(to right, rgb(204,102,0), rgb(255,128,0));
 }
 
+.linkPurple {
+    background-image: linear-gradient(to right, rgb(76,0,153), rgb(102,0,204));
+}
+
+.linkPurple:hover {
+    background-image: linear-gradient(to right, rgb(102,0,204), rgb(127,0,255));
+}
+
 .linkRed {
     background-image: linear-gradient(to right, rgb(100,0,0), rgb(150,0,0));
 }
@@ -63,11 +71,11 @@
 }
 
 .linkYellow {
-    background-image: linear-gradient(to right, rgb(153,153,0), rgb(204,204,0));
+    background-image: linear-gradient(to right, rgb(153,153,0), rgb(180,180,0));
 }
 
 .linkYellow:hover {
-    background-image: linear-gradient(to right, rgb(204,204,0), rgb(255,255,0));
+    background-image: linear-gradient(to right, rgb(180,180,0), rgb(200,200,0));
 }
 
 .menu {
