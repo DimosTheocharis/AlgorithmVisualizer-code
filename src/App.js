@@ -8,10 +8,9 @@ import Asterisk from './Screens/Asterisk/Asterisk';
 import Dijkstra from './Screens/Dijkstra/Dijkstra';
 import Comparison from './Screens/Comparison/Comparison';
 import BubbleSort from './Screens/BubbleSort/BubbleSort';
-import BubbleSort2 from './Screens/BubbleSort/BubbleSort2';
 import SelectionSort from './Screens/SelectionSort/SelectionSort';
-import SelectionSort2 from './Screens/SelectionSort/SelectionSort2';
 import InsertionSort from './Screens/InsertionSort/InsertionSort';
+import MergeSort from './Screens/MergeSort/MergeSort';
 import Instructions from './Screens/Instructions/Instructions';
 
 const rows = 20;
@@ -248,9 +247,10 @@ function App() {
         <Route exact path="/asterisk" element={<Asterisk/>}/>
         <Route path="/dijkstra" element={<Dijkstra/>}/>
         <Route path="/comparison" element={<Comparison/>}/>
-        <Route path="/bubblesort" element={<BubbleSort2/>}/>
-        <Route path="/selectionsort" element={<SelectionSort2/>}/>
+        <Route path="/bubblesort" element={<BubbleSort/>}/>
+        <Route path="/selectionsort" element={<SelectionSort/>}/>
         <Route path="/insertionsort" element={<InsertionSort/>}/>
+        <Route path="/mergesort" element={<MergeSort/>}/>
         <Route path="/instructions" element={<Instructions/>}/>
         <Route path="*" element={<Asterisk/>}/>
       </Routes>

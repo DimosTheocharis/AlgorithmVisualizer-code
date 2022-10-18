@@ -1,33 +1,20 @@
 import React, { useState, useContext, useRef } from 'react';
+//importing components
 import Bar from '../../Components/Bar/Bar';
 import Slider from '../../Components/Slider/Slider';
 import AddBarButton from '../../Components/AddBarButton/AddBarButton';
 import Selector from '../../Components/Selector/Selector';
 import Settings from '../../Components/Settings/Settings';
+import Panel from '../../Components/Panel/Panel';
+//importing data structures
 import BarNode from '../../Data Structures/BarNode';
 import { AppContext } from '../../App';
 import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
 import styles from './SortingTemplate.module.css';
 
-const myArray = [9, 5, 1, 4, 3];
-console.log("Before sorting: ", myArray);
-let j,i,key;
-for (i = 1; i < myArray.length; i++) {
-    key = myArray[i];
-    j = i - 1;
-    while (j >= 0 && myArray[j] > key) {
-        myArray[j+1] = myArray[j];
-        j -= 1;
-    }
-    
-    myArray[j + 1] = key;
-}
 
-console.log("After sorting: ", myArray);
-
-
-function SortingTemplate({algorithm, algorithmState, board, isDisabled, createBoard, savedBoards, setBoard, setIsDisabled, setSavedBoards}) {
+function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages, createBoard, savedBoards, setBoard, setIsDisabled, setSavedBoards}) {
     const { handleLoadButton, setShowSelector, showSelector } = useContext(AppContext);
     const [barHeights, setBarHeights] = useState(null); //saves the heights of the bars. It's used when the user wants to reset the board to the previous state
     const [editBoard, setEditBoard] = useState(false); //whether or not the user wants to add/delete/resize a bar
@@ -166,7 +153,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, createBo
                 return {...prev, "clearButton": true, "editButton": true, "loadButton": true, "resetButton": true, 
                                  "saveButton": true, "shuffleButton": true, "slider": true}
             })
-            algorithm();
+            console.log(algorithm());
         } else {
             algorithmState.current = "finished";
         }
@@ -343,6 +330,9 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, createBo
                         /> 
                     </div>
                 </div>
+                <Panel
+                    messages={messages} 
+                />
             </section>
         </div>
     )

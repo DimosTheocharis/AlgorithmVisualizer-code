@@ -32,6 +32,11 @@ const SiderbarData = [
         class: "linkPurple"
     },
     {
+        title: "MergeSort",
+        path: "/mergesort",
+        class: "linkPink"
+    },
+    {
         title: "Instructions",
         path: "./instructions",
         class: "linkGray"

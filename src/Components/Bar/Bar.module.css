@@ -39,6 +39,12 @@
     background-color: rgb(255,127,0);
 }
 
+.index {
+    position: absolute;
+    bottom: -25px;
+    color: white;
+}
+
 .minimum {
     background-color: rgb(100,0,0);
 }

@@ -68,6 +68,7 @@ function Bar({ bar, deleteBar, editBoard, showHeight }) {
                 :
                     null
             }
+            <p className={BarCSS.index}>{bar.getIndex()}</p>
             {determineBarTools()}
         </div>
     )

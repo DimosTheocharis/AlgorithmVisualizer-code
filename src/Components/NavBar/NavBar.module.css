@@ -54,6 +54,14 @@
     background-image: linear-gradient(to right, rgb(204,102,0), rgb(255,128,0));
 }
 
+.linkPink {
+    background-image: linear-gradient(to right, rgb(153,0,153), rgb(204,0,204));
+}
+
+.linkPink:hover {
+    background-image: linear-gradient(to right, rgb(204,0,204), rgb(255,0,255));
+}
+
 .linkPurple {
     background-image: linear-gradient(to right, rgb(76,0,153), rgb(102,0,204));
 }
