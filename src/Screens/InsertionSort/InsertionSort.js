@@ -5,7 +5,7 @@ import { AppContext } from '../../App';
 
 
 function InsertionSort() {
-    const { animationDuration, sleep } = useContext(AppContext);
+    const { algorithmState, animationDuration, pause, sleep } = useContext(AppContext);
     const [board, setBoard] = useState(null); //saves the bars as objects
     const [savedBoards, setSavedBoards] = useState(false);
     const [messages, setMessages] = useState(["No message yet."]);
@@ -19,7 +19,6 @@ function InsertionSort() {
         "shuffleButton": false,
         "slider": false    
     })
-    let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
     //unbegan if it has not started yet
     //pending if algorithm is currently running
     //finished if either algorithm either has normally ended, or manually stopped
@@ -58,7 +57,7 @@ function InsertionSort() {
     const loadSavedBoards = () => {
         const boards = JSON.parse(localStorage.getItem("boards"));
         return boards === null ? {} : boards;
-      }
+    }
 
     const performBoardChanges = (changes) => {
         const newBoard = [...board];
@@ -80,6 +79,20 @@ function InsertionSort() {
             performBoardChanges(changes);
             resolvedValue = await sleep(animationDuration);
             while (j >= 0 && board[j].getValue() > key) {
+                if (algorithmState.current === "paused") {
+                    resolvedValue = await pause();
+                    //User clicked pause button and then reset button
+                    if (algorithmState.current === "unbegun") {
+                        return;
+                    }
+                }
+
+                if (algorithmState.current === "finished") {
+                    handleSortingTermination();
+                    return 0;
+                }
+
+                
                 //highlight the bar whose value is greater than key's value
                 changes = [];
                 changes.push({"index": j, "status": "examining", "value": board[j].getValue()});
@@ -111,10 +124,6 @@ function InsertionSort() {
                 resolvedValue = await sleep(animationDuration);
                 j -= 1;
 
-                if (algorithmState.current === "finished") {
-                    handleSortingTermination();
-                    return 0;
-                }
             }
             //highlight the bar after the bar whose value is smaller than key's value
             changes = [];

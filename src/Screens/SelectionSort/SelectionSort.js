@@ -5,7 +5,7 @@ import { AppContext } from '../../App';
 
 
 function SelectionSort() {
-    const { animationDuration, sleep } = useContext(AppContext);
+    const { algorithmState, animationDuration, pause, sleep } = useContext(AppContext);
     const [board, setBoard] = useState(null); //saves the bars as objects
     const [savedBoards, setSavedBoards] = useState(false);
     const [messages, setMessages] = useState(["No message yet."]); //the message that the algorithm will display at the panel
@@ -19,7 +19,6 @@ function SelectionSort() {
         "shuffleButton": false,
         "slider": false    
     })
-    let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
     //unbegan if it has not started yet
     //pending if algorithm is currently running
     //finished if either algorithm either has normally ended, or manually stopped
@@ -71,7 +70,7 @@ function SelectionSort() {
 
     const SelectionSortAlgorithm = async () => {
         let i, j, changes, minIndex, resolvedValue;
-        for (i = 0; i < board.length - 1; i++) {
+        for (i = 0; i < board.length - 1 && (algorithmState.current === "pending" || algorithmState.current === "paused"); i++) {
             minIndex = i;
             changes = [];
             changes.push({"index": i, "status": "minimum", "value": board[i].getValue()});
@@ -79,7 +78,21 @@ function SelectionSort() {
             performBoardChanges(changes);
             resolvedValue = await sleep(animationDuration);
 
-            for (j = i + 1; j < board.length; j++) {
+            for (j = i + 1; j < board.length && (algorithmState.current === "pending" || algorithmState.current === "paused"); j++) {
+                if (algorithmState.current === "paused") {
+                    resolvedValue = await pause();
+                    //User clicked pause button and then reset button
+                    if (algorithmState.current === "unbegun") {
+                        return;
+                    }
+                }
+
+                if (algorithmState.current === "finished") {
+                    handleSortingTermination();
+                    return 0;
+                }
+
+
                 changes = [];
                 changes.push({"index": j, "status": "examining", "value": board[j].getValue()});
                 setMessages([`Examining ${board[j].getValue()}.`]);

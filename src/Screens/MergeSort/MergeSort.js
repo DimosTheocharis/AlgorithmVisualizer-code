@@ -3,65 +3,6 @@ import SortingTemplate from '../../Templates/SortingTemplate/SortingTemplate';
 import BarNode from '../../Data Structures/BarNode';
 import { AppContext } from '../../App';
 
-let A = [9,8,7,6,5,4,3,2,1,0];
-
-
-const merge = (array) => {
-    if (array.length > 1) {
-        let i,j,k;
-
-        let mid = Math.floor(array.length / 2); //find the index of the item at the middle of the array
-
-        let leftArray = []; //the half left sub-array
-        for (i = 0; i < mid; i++) {
-            leftArray.push(array[i]);
-        }
-
-        let rightArray = []; //the half right sub-array
-        for (j = mid; j < array.length; j++) {
-            rightArray.push(array[j]);
-        }
-
-        leftArray = merge(leftArray); //recursive call for the left sub-array
-        rightArray = merge(rightArray); //recursive call for the right sub-array
-
-        //mergining
-        i = 0; //the index for the left sub-array
-        j = 0; //the index for the right sub-array
-        k = 0; //the index for the main array
-
-        //putting items from the 2 sub-arrays to the main array at ascending order
-        while (i < leftArray.length && j < rightArray.length) {
-            if (leftArray[i] <= rightArray[j]) {
-                array[k] = leftArray[i];
-                i += 1;  
-            } else {
-                array[k] = rightArray[j];
-                j += 1;
-            }
-            k += 1;
-        }
-
-        //put any elements from the left sub-array that left
-        while (i < leftArray.length) {
-            array[k] = leftArray[i];
-            k += 1;
-            i += 1;
-        }
-
-        //put any elements from the right sub-array that left
-        while (j < rightArray.length) {
-            array[k] = rightArray[j];
-            k += 1;
-            j += 1;
-        }
-    }
-
-    return array; //return the main array
-}
-
-
-
 function MergeSort() {
     const { animationDuration, sleep } = useContext(AppContext);
     const [board, setBoard] = useState(null); //saves the bars as objects
@@ -339,6 +280,7 @@ function MergeSort() {
             resolvedValue = await sleep(animationDuration);
 
         } else if (right === left) {
+            //sub-board has only one element.
             changes = [];
             changes.push({"index": left, "status": "examining", "value": board[left].getValue()});
             performBoardChanges(changes);

@@ -150,12 +150,26 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
             algorithmState.current = "pending";
             setBarHeights(extractHeights(board)); //save the present state of the board
             setIsDisabled(prev => {
-                return {...prev, "clearButton": true, "editButton": true, "loadButton": true, "resetButton": true, 
+                return {...prev, "clearButton": true, "editButton": true, "loadButton": true, "pauseButton": false, "resetButton": true, 
                                  "saveButton": true, "shuffleButton": true, "slider": true}
             })
-            console.log(algorithm());
+            algorithm();
         } else {
             algorithmState.current = "finished";
+        }
+    }
+
+    const handlePauseButton = () => {
+        if (algorithmState.current === "pending") {
+            algorithmState.current = "paused";
+            setIsDisabled(prev => {
+                return {...prev, "clearButton": false, "operationButton": true, "resetButton": false}
+            })
+        } else {
+            algorithmState.current = "pending";
+            setIsDisabled(prev => {
+                return {...prev, "clearButton": true, "operationButton": false, "resetButton": true}
+            })
         }
     }
 
@@ -163,7 +177,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         //resets the board to the previous state ie to the particular sequence of the bars before the start button got clicked
         algorithmState.current = "unbegun";
         createBoard(barHeights);
-        setIsDisabled({"editButton": false, "operationButton": false, "resetButton": true, "saveButton": false, 
+        setIsDisabled({"editButton": false, "operationButton": false, "pauseButton": true, "resetButton": true, "saveButton": false, 
                        "shuffleButton": false, "slider": false});
     }
 
@@ -179,7 +193,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         algorithmState.current = "unbegun";
         setShowSelector(false);
         setIsDisabled({
-            "clearButton": false, "editButton": false, "loadButton": false, "operationButton": false,
+            "clearButton": false, "editButton": false, "loadButton": false, "operationButton": false, "pauseButton": true,
             "resetButton": true, "saveButton": false, "shuffleButton": false, "slider": false   
         })
     }   
@@ -263,6 +277,13 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
                     disabled={isDisabled["operationButton"]}
                 >
                     {algorithmState.current === "pending" ? "Stop" : "Start"}
+                </button>
+                <button
+                    onClick={handlePauseButton}
+                    className={`${styles.button} ${isDisabled["pauseButton"] ? `${styles.disabled}` : null}`} 
+                    disabled={isDisabled["pauseButton"]}
+                >
+                    {algorithmState.current === "paused" ? "Resume" : "Pause"}
                 </button>
                 <Slider/>
                 <button 

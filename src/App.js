@@ -11,6 +11,7 @@ import BubbleSort from './Screens/BubbleSort/BubbleSort';
 import SelectionSort from './Screens/SelectionSort/SelectionSort';
 import InsertionSort from './Screens/InsertionSort/InsertionSort';
 import MergeSort from './Screens/MergeSort/MergeSort';
+import QuickSort from './Screens/QuickSort/QuickSort';
 import Instructions from './Screens/Instructions/Instructions';
 
 const rows = 20;
@@ -251,6 +252,7 @@ function App() {
         <Route path="/selectionsort" element={<SelectionSort/>}/>
         <Route path="/insertionsort" element={<InsertionSort/>}/>
         <Route path="/mergesort" element={<MergeSort/>}/>
+        <Route path="/quicksort" element={<QuickSort/>}/>
         <Route path="/instructions" element={<Instructions/>}/>
         <Route path="*" element={<Asterisk/>}/>
       </Routes>

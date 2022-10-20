@@ -78,6 +78,14 @@
     background-image: linear-gradient(to right, rgb(150,0,0), rgb(175,0,0));
 }
 
+.linkRose {
+    background-image: linear-gradient(to right, rgb(153,0,76), rgb(204,0,102));
+}
+
+.linkRose:hover {
+    background-image: linear-gradient(to right, rgb(204,0,102), rgb(255,0,127));
+}
+
 .linkYellow {
     background-image: linear-gradient(to right, rgb(153,153,0), rgb(180,180,0));
 }

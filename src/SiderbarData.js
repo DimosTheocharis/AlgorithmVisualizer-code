@@ -1,4 +1,4 @@
-//the data for the menu navigation bar
+//the data for each screen at the navigation bar
 
 const SiderbarData = [
     {
@@ -35,6 +35,11 @@ const SiderbarData = [
         title: "MergeSort",
         path: "/mergesort",
         class: "linkPink"
+    },
+    {
+        title: "QuickSort",
+        path: "/quicksort",
+        class: "linkRose"
     },
     {
         title: "Instructions",
