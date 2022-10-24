@@ -300,8 +300,89 @@ function Instructions() {
                                     Now the entire board is sorted. 
                                 </li>
                             </ol>
+                        </p>
+                    </div>
+                </div>
+            </section>
 
 
+            <section className={InstructionsCSS.section}>
+                <div className={InstructionsCSS.sectionTitle}>
+                <div className={InstructionsCSS.sectionTitleLine}/>
+                    <h2 className={InstructionsCSS.sectionTitleText}>Selection Sort</h2>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                </div>
+                <div className={InstructionsCSS.sectionContent}>
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>General</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Selection Sort</p> is a sorting algorithm which repeatedly finds the minimun 
+                                element from the unsorted part and places <div className={InstructionsCSS.barPlaced}/> it at the beginning. The elements here are bars inside a board.
+                                Each bar has a value (height) that is used to determine the tallest bar between 2 bars.
+                        </p>
+                    </div>
+
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            The idea of the algorithm is that we maintain 2 sub-boards of the original board. The algorithm runs n-1 times, where n is the number of bars and at each iteration 
+                            one bar is placed <div className={InstructionsCSS.barPlaced}/> at the correct spot.
+                            <ul className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    The sub-board which is already sorted.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    The sub-board which has not been sorted yet.
+                                </li>
+                            </ul>
+                            At each iteration, the shortest bar from the unsorted sub-board is picked and placed at the sorted sub-board. The algorithm follows these steps: 
+                            <ol className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    Initialize i = 0.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Repeat until i = n - 1:
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Set the bar at index i as minimum <div className={InstructionsCSS.barMinimum}/>.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Initialize j = i + 1.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Repeat the following process until j = n:
+                                            <ol className={InstructionsCSS.listRoman}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Check if the bar at index j is shorter than minimum <div className={InstructionsCSS.barMinimum}/>. Set the status of this bar as 
+                                                    examining <div className={InstructionsCSS.barExamining}/>.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    If the bar at index j is shorter than minimum <div className={InstructionsCSS.barMinimum}/>, then set it as 
+                                                    the new minimum <div className={InstructionsCSS.barMinimum}/>. Otherwise, continue.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment j.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Now we have the shortest bar from the unsorted sub-board (minimum <div className={InstructionsCSS.barMinimum}/>).
+                                            We also have the bar at index i which is marked as pre-placed <div className={InstructionsCSS.barPrePlaced}/> because i is the position where the minimum
+                                            bar <div className={InstructionsCSS.barMinimum}/> is going to be placed <div className={InstructionsCSS.barPlaced}/>.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Swap them. Now bar at index i is placed <div className={InstructionsCSS.barPlaced}/> at the correct spot.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Increment i.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Finally, the first n-1 bars are placed <div className={InstructionsCSS.barPlaced}/> at the correct spot resulting also at the correct placing 
+                                    of the last bar. Board is sorted.
+                                </li>
+                            </ol>
                         </p>
                     </div>
                 </div>
