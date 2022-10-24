@@ -247,6 +247,66 @@ function Instructions() {
                     </div>
                 </div>
             </section>
+
+            
+            <section className={InstructionsCSS.section}>
+                <div className={InstructionsCSS.sectionTitle}>
+                <div className={InstructionsCSS.sectionTitleLine}/>
+                    <h2 className={InstructionsCSS.sectionTitleText}>Bubble Sort</h2>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                </div>
+                <div className={InstructionsCSS.sectionContent}>
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>General</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Bubble Sort</p> is a sorting algorithm 
+                                that compares two adjacent elements and swaps them until they are in the intended order. The elements here are bars inside a board.
+                                Each bar has a value (height) that is used to determine the tallest bar between 2 bars.
+                        </p>
+                    </div>
+
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            The idea of the algorithm is to run n-1 times, where n is the number of bars and at each iteration one bar is placed <div className={InstructionsCSS.barPlaced}/> at 
+                            the correct spot. The algorithm follows these steps: 
+                            <ol className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    Initialize i = 0;
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Initialize j = n - 1;
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Start from the end of the board and compare the bar at index j with its previous. These bars are now being examined <div className={InstructionsCSS.barExamining}/>.
+                                        </li>   
+                                        <li className={InstructionsCSS.listItem}>
+                                            If the bars are at the desired order, then continue. Otherwise, swap them.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Decrement j and repeat the process examining 2 adjacent bars until you reach the bar at the position i.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    When you are done, the bar at index i is placed at the correct spot. Mark it as placed <div className={InstructionsCSS.barPlaced}/>.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Increment i and repeat the process at steps 2 to 4 until i == n.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Now the entire board is sorted. 
+                                </li>
+                            </ol>
+
+
+                        </p>
+                    </div>
+                </div>
+
+            </section>
         </div>
     )
 }

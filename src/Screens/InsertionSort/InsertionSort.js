@@ -83,7 +83,7 @@ function InsertionSort() {
                     resolvedValue = await pause();
                     //User clicked pause button and then reset button
                     if (algorithmState.current === "unbegun") {
-                        return;
+                        return 0;
                     }
                 }
 

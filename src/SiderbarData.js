@@ -9,22 +9,22 @@ const SiderbarData = [
     {
         title: "Dijkstra",
         path: "/dijkstra",
-        class: "linkGreen"
+        class: "linkOrange"
     },
     {
         title: "Comparison",
         path: "/comparison",
-        class: "linkBlue"
+        class: "linkYellow"
     },
     {
         title: "Bubblesort",
         path: "/bubblesort",
-        class: "linkOrange"
+        class: "linkGreen"
     },
     {
         title: "Selectionsort",
         path: "/selectionsort",
-        class: "linkYellow"
+        class: "linkBlue"
     },
     {
         title: "InsertionSort",

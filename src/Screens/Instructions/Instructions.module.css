@@ -3,6 +3,19 @@
     margin: 0px;
 }
 
+.barExamining {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background-color: rgb(255,127,0);
+}
+.barPlaced {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background-color: rgb(0,100,0);
+}
+
 .blockBlocked {
     display: inline-block;
     width: 15px;
