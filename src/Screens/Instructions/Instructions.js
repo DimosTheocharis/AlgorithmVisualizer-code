@@ -44,7 +44,7 @@ function Instructions() {
             <section className={InstructionsCSS.section}>
                 <div className={InstructionsCSS.sectionTitle}>
                     <div className={InstructionsCSS.sectionTitleLine}/>
-                    <h2 className={InstructionsCSS.sectionTitleText}>ASTERISK</h2>
+                        <h2 className={InstructionsCSS.sectionTitleText}>ASTERISK</h2>
                     <div className={InstructionsCSS.sectionTitleLine}/>
                 </div>
                 <div className={InstructionsCSS.sectionContent}>
@@ -251,7 +251,7 @@ function Instructions() {
             
             <section className={InstructionsCSS.section}>
                 <div className={InstructionsCSS.sectionTitle}>
-                <div className={InstructionsCSS.sectionTitleLine}/>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
                     <h2 className={InstructionsCSS.sectionTitleText}>Bubble Sort</h2>
                     <div className={InstructionsCSS.sectionTitleLine}/>
                 </div>
@@ -308,7 +308,7 @@ function Instructions() {
 
             <section className={InstructionsCSS.section}>
                 <div className={InstructionsCSS.sectionTitle}>
-                <div className={InstructionsCSS.sectionTitleLine}/>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
                     <h2 className={InstructionsCSS.sectionTitleText}>Selection Sort</h2>
                     <div className={InstructionsCSS.sectionTitleLine}/>
                 </div>
@@ -326,7 +326,7 @@ function Instructions() {
                         <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
                         <p className={InstructionsCSS.pieceText}>
                             The idea of the algorithm is that we maintain 2 sub-boards of the original board. The algorithm runs n-1 times, where n is the number of bars and at each iteration 
-                            one bar is placed <div className={InstructionsCSS.barPlaced}/> at the correct spot.
+                            one bar is placed <div className={InstructionsCSS.barPlaced}/> at the correct spot. The sub-boards are:
                             <ul className={InstructionsCSS.list}>
                                 <li className={InstructionsCSS.listItem}>
                                     The sub-board which is already sorted.
@@ -386,7 +386,94 @@ function Instructions() {
                         </p>
                     </div>
                 </div>
+            </section>
 
+
+            <section className={InstructionsCSS.section}>
+                <div className={InstructionsCSS.sectionTitle}>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                    <h2 className={InstructionsCSS.sectionTitleText}>Insertion Sort</h2>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                </div>
+                <div className={InstructionsCSS.sectionContent}>
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>General</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Insertion Sort</p> is a sorting algorithm that works similar to the way you sort playing cards 
+                            in your hands. The array is virtually split into a sorted and an unsorted part. Values from the unsorted part are picked and placed <div className={InstructionsCSS.barPlaced}/> at the correct position in the sorted part.
+                            The elements here are bars inside a board. Each bar has a value (height) that is used to determine the tallest bar between 2 bars.
+                        </p>
+                    </div>
+
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            The idea of the algorithm is that we maintain 2 sub-boards of the original board. The algorithm runs n-1 times, where n is the number of bars and at each iteration one bar is placed 
+                            at the correct spot. The sub-boards are:
+                            <ul className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    The sub-board which is already sorted.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    The sub-board which has not been sorted yet.
+                                </li>
+                            </ul>
+                            At each iteration, the first bar from the unsorted sub-board is picked and placed at the sorted sub-board. The algorithm follows these steps: 
+                            <ol className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    Initialize i = 1.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Repeat until i = n:
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Initialize z = i - 1.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Mark the bar at index i as pre-placed <div className={InstructionsCSS.barPrePlaced}/> because this particular bar is going to be 
+                                            placed <div className={InstructionsCSS.barPlaced}/> at the correct position inside sorted sub-board in this iteration. The bar at index i is now called as key. 
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Repeat the following process while j > 0 and the bar at index j is bigger than key:
+                                            <ol className={InstructionsCSS.listRoman}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Mark the bar at index j as examining <div className={InstructionsCSS.barExamining}/>. This bar is bigger than key so we want to 
+                                                    move it to the right in order for the key to be placed <div className={InstructionsCSS.barPlaced}/> at the correct position of 
+                                                    the sorted sub-board.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Mark the bar at index j + 1 as 'copied' <div className={InstructionsCSS.barCopied}/>. The bar at index j will move to the right
+                                                    by letting the bar at the right, (j + 1), to copy its height.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Set the height of the bar at index j + 1 as the height of the bar at index j.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Decrement j.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            When we are done, the bar at index j + 1 will be the leftmost bar whose value is bigger thank key's value. Mark it as minimum <div className={InstructionsCSS.barMinimum}/>.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Put the key bar in the index j + 1.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Now the bars from index 0 to index i are placed <div className={InstructionsCSS.barPlaced}/> correctly, ie the sub-board [0-i] is sorted.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Increment i.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Now the bars from index 0 to index i are placed <div className={InstructionsCSS.barPlaced}/> correctly, ie the whole board [0-i] is sorted.
+                                </li>
+                            </ol>
+                        </p>
+                    </div>
+                </div>
             </section>
         </div>
     )

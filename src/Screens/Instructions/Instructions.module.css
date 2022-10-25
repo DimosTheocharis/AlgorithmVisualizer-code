@@ -3,6 +3,13 @@
     margin: 0px;
 }
 
+.barCopied {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background-color: rgb(125,125,125);
+}
+
 .barExamining {
     display: inline-block;
     width: 8px;
