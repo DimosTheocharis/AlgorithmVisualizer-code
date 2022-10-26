@@ -434,7 +434,7 @@ function Instructions() {
                                             placed <div className={InstructionsCSS.barPlaced}/> at the correct position inside sorted sub-board in this iteration. The bar at index i is now called as key. 
                                         </li>
                                         <li className={InstructionsCSS.listItem}>
-                                            Repeat the following process while j > 0 and the bar at index j is bigger than key:
+                                            Repeat the following process while j {'>'} 0 and the bar at index j is bigger than key:
                                             <ol className={InstructionsCSS.listRoman}>
                                                 <li className={InstructionsCSS.listItem}>
                                                     Mark the bar at index j as examining <div className={InstructionsCSS.barExamining}/>. This bar is bigger than key so we want to 
@@ -469,6 +469,196 @@ function Instructions() {
                                 </li>
                                 <li className={InstructionsCSS.listItem}>
                                     Now the bars from index 0 to index i are placed <div className={InstructionsCSS.barPlaced}/> correctly, ie the whole board [0-i] is sorted.
+                                </li>
+                            </ol>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+
+            <section className={InstructionsCSS.section}>
+            <div className={InstructionsCSS.sectionTitle}>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                    <h2 className={InstructionsCSS.sectionTitleText}>Merge Sort</h2>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                </div>
+                <div className={InstructionsCSS.sectionContent}>
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>General</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Merge Sort</p> is a recursive sorting algorithm which works by dividing the array we are working on
+                                into two equal halves and then they are combined in a sorted manner. The elements here are bars inside a board. Each bar has a value (height) that is used to determine the 
+                                tallest bar between 2 bars.
+                        </p>
+                    </div>
+
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            The idea of the algorithm is that we are constantly dividing the board in halves until it can not be further splitted. This means that when the sub-board has only one or zero bars, the 
+                            division will stop. With other words, if the sub-board has many bars (2+), we divide it in 2 halves and then call Merge Sort for each of the half. When both halves are finally
+                            sorted <div className={InstructionsCSS.barPlaced}/>, merge operation is applied. Merge operation is the process of combining 2 sorted sub-boards into one board which will be also 
+                            sorted <div className={InstructionsCSS.barPlaced}/>. Assume that the original board has n bars.
+                            The algorithm follows these steps:
+
+                            <ol className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    Call Merge Sort with parameters:
+                                    <ul className={InstructionsCSS.list}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Sub-board: the entire board.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            <p className={InstructionsCSS.textGreen}>Left</p>: 0.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            <p className={InstructionsCSS.textRed}>Right</p>: n - 1.
+                                        </li>
+                                    </ul>
+                                    <p className={InstructionsCSS.textGreen}>Left</p> and <p className={InstructionsCSS.textRed}>Right</p> denote the start and end of the sub-board we are working on respectively.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Repeat the following process recursively, until the sub-board we are working on cannot be further diveded:
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            If <p className={InstructionsCSS.textRed}>Right</p> {'>'} <p className={InstructionsCSS.textGreen}>Left</p> compute 
+                                            mid = (<p className={InstructionsCSS.textGreen}>Left</p> + <p className={InstructionsCSS.textRed}>Right</p>) / 2. This 
+                                            is the index of the middle bar of the given sub-board.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Compute the left and right sub-boards which are the board [<p className={InstructionsCSS.textGreen}>Left</p>, mid] and 
+                                            [mid + 1, <p className={InstructionsCSS.textRed}>Right</p>] respectively. 
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Call Merge Sort with parameters:
+                                            <ul className={InstructionsCSS.list}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Sub-board: the left sub-board.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    <p className={InstructionsCSS.textGreen}>Left</p>: <p className={InstructionsCSS.textGreen}>Left</p>.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    <p className={InstructionsCSS.textRed}>Right</p>: mid.
+                                                </li>
+                                            </ul>
+                                            Save the result to left sub-board.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Call Merge Sort with parameters:
+                                            <ul className={InstructionsCSS.list}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Sub-board: the right sub-board.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    <p className={InstructionsCSS.textGreen}>Left</p>: mid + 1.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    <p className={InstructionsCSS.textRed}>Right</p>: <p className={InstructionsCSS.textRed}>Right</p>.
+                                                </li>
+                                            </ul>
+                                            Save the result to right sub-board.
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    As soon as the whole board has been divided into sub-boards with 0 or 1 bars due to the recursive calls of Merge Sort, the 
+                                    merging proccess is applied. We saw that each call of Merge Sort for a certain sub-board calls Merge Sort for the left and right sub-boards
+                                    of the given sub-board. Lets assume that:
+                                    <ul className={InstructionsCSS.list}>
+                                        <li className={InstructionsCSS.listItem}>GB is the given sub-board.</li>
+                                        <li className={InstructionsCSS.listItem}>LB is the left sub-board.</li>
+                                        <li className={InstructionsCSS.listItem}>RB is the right sub-board.</li>
+                                    </ul>
+                                    It is true that LB and RB united result to GB.
+                                    After these 2 recursive calls mentioned above end, we do the following process:
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Initialization:
+                                            <ul className={InstructionsCSS.list}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Initialize i = 0 which is the index that will be used for the LB.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Initialize j = 0 which is the index that will be used for the RB.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Initialize k = 0 which is the index that will be used for the GB.
+                                                </li>
+                                            </ul>
+                                            We also assume that I and J are the lengths of LB and RB respectively.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            While i {'<'} I and j {'<'} J repeat:
+                                            <ol className={InstructionsCSS.listRoman}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Set the bars: LB[i] and RB[j] as examining <div className={InstructionsCSS.barExamining}/>.
+                                                    We are going to examing which one is taller.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    If LB[i] {'<='} RB[j] then:
+                                                    <ol className={InstructionsCSS.list}>
+                                                        <li className={InstructionsCSS.listItem}>
+                                                            Set GB[k] = LB[i]. Now GB[k] is placed <div className={InstructionsCSS.barPlaced}/>.
+                                                        </li>
+                                                        <li className={InstructionsCSS.listItem}>
+                                                            Increment i.
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Else, ie LB[i] {'>'} RB[j] then:
+                                                    <ol className={InstructionsCSS.list}>
+                                                        <li className={InstructionsCSS.listItem}>
+                                                            Set GB[k] = RB[j]. Now GB[k] is placed <div className={InstructionsCSS.barPlaced}/>.
+                                                        </li>
+                                                        <li className={InstructionsCSS.listItem}>
+                                                            Increment j.
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment k.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            The next step is two put any bars left from the LB to GB. So, while i {'<'} I:
+                                            <ol className={InstructionsCSS.listRoman}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Set GB[k] = LB[i]. Now GB[k] is placed <div className={InstructionsCSS.barPlaced}/>.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment i.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment k.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            The next step is two put any bars left from the RB to GB. So, while j {'<'} J:
+                                            <ol className={InstructionsCSS.listRoman}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Set GB[k] = RB[j]. Now GB[k] is placed <div className={InstructionsCSS.barPlaced}/>.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment j.
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment k.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            By this far, sub-board [<p className={InstructionsCSS.textGreen}>Left</p>, <p className={InstructionsCSS.textRed}>Right</p>] 
+                                            is sorted <div className={InstructionsCSS.barPlaced}/>.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Return GB.
+                                        </li>
+                                    </ol>
                                 </li>
                             </ol>
                         </p>

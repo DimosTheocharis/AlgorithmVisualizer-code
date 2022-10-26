@@ -159,6 +159,11 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
+.textGreen {
+    display: inline-block;
+    color: rgb(0,175,0);
+}
+
 .textItalic {
     display: inline-block;
     font-style: italic;
@@ -167,6 +172,11 @@
 .textMedium {
     display: inline-block;
     font-size: 20px;
+}
+
+.textRed {
+    display: inline-block;
+    color: rgb(175,0,0);
 }
 
 .textUnderline {

@@ -174,9 +174,7 @@ function MergeSort() {
                     `Examining ${leftArray[i]} and ${rightArray[j]}`
                 ]);
                 resolvedValue = await sleep(animationDuration);
-                
-
-                
+                           
                 if (leftArray[i] <= rightArray[j]) {
                     setMessages([
                         ...pushIndexes([...arrayMessages], i, j),
