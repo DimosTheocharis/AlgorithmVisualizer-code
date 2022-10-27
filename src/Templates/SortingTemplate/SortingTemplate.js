@@ -22,6 +22,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     const boardNameInputRef = useRef(null); //it is used when the arrow button is clicked, so as to get access to the name of the board the user wants to save
     const [selectedBoardName, setSelectedBoardName] = useState(""); //the name of the saved board that got selected from the selector. 
     const [showHeight, setShowHeight] = useState(true);
+    const [showIndex, setShowIndex] = useState(true);
     const [showSettings, setShowSettings] = useState(false);
 
     
@@ -108,6 +109,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
                     deleteBar={deleteBar}
                     editBoard={editBoard}
                     showHeight={showHeight}
+                    showIndex={showIndex}
                 />
             )
         })
@@ -242,6 +244,10 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         setShowHeight(prev => !prev);
     }
 
+    const toggleIndex = () => {
+        setShowIndex(prev => !prev);
+    }
+
     const toggleSettings = () => {
         setShowSettings(prev => !prev);
     }
@@ -249,6 +255,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     //object that holds the information about the settings section of the Asterisk screen
     const settings = [
         {title: "Show height", toggleFunction: toggleHeight, enabled: showHeight},
+        {title: "Show index", toggleFunction: toggleIndex, enabled: showIndex}
     ]
 
     //determine the color of the operator button (start/stop button) here to avoid confusion at the the render block

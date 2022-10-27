@@ -204,15 +204,6 @@ function QuickSort() {
             }
             setMessages(["Click Start button to run again."]);
         }
-        /*
-        //if algorithm stopped or paused and then reset button got clicked, then the operation button should be active and ready to run algoirhtm again
-        if (abnormalCompletion) {
-            console.log("hh")
-            setIsDisabled(prev => {
-                return {...prev, "operationButton": false, "resetButton": true}
-            })
-            setMessages(["Click Start to run again."]);
-        } */
     }
 
     return (

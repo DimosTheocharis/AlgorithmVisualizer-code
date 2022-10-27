@@ -524,7 +524,7 @@ function Instructions() {
                                         <li className={InstructionsCSS.listItem}>
                                             If <p className={InstructionsCSS.textRed}>Right</p> {'>'} <p className={InstructionsCSS.textGreen}>Left</p> compute 
                                             mid = (<p className={InstructionsCSS.textGreen}>Left</p> + <p className={InstructionsCSS.textRed}>Right</p>) / 2. This 
-                                            is the index of the middle bar of the given sub-board.
+                                            is the index of the middle bar of the given sub-board. Else, return the given sub-board.
                                         </li>
                                         <li className={InstructionsCSS.listItem}>
                                             Compute the left and right sub-boards which are the board [<p className={InstructionsCSS.textGreen}>Left</p>, mid] and 
@@ -664,6 +664,155 @@ function Instructions() {
                         </p>
                     </div>
                 </div>
+            </section>
+
+
+            <section className={InstructionsCSS.section}>
+                <div className={InstructionsCSS.sectionTitle}>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                    <h2 className={InstructionsCSS.sectionTitleText}>Quick Sort</h2>
+                    <div className={InstructionsCSS.sectionTitleLine}/>
+                </div>
+                <div className={InstructionsCSS.sectionContent}>
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>General</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Quick Sort</p> is a recursive sorting algorithm which picks an element as pivot and 
+                                partitions the given array around pivot. The elements here are bars inside a board. Each bar has a value (height) that is used to determine the tallest bar between 2 bars.
+                        </p>
+                    </div>
+
+                    <div className={InstructionsCSS.sectionContentPiece}>
+                        <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
+                        <p className={InstructionsCSS.pieceText}>
+                            The key process of the algorithm is the partition procedure. The goal of partition is, given a board and a bar as a pivot, to put pivot at its correct position <div className={InstructionsCSS.barPlaced}/> in 
+                            a sorted board and put all shorter bars before pivot and all taller bars after pivot. After that, we have to call quickSort for the sub-boards created before and after pivot.
+                            The partition can be done by starting from the leftmost bar and keeping track of the index of shorter (or equal) bars than pivot. While traversing, if we find a bar that is shorter than pivot, we can swap It
+                            with the bar at the index we saved before. Otherwise, continue. 
+                            Assume that the original board has n bars. The algorithm follows these steps:
+                            <ol className={InstructionsCSS.list}>
+                                <li className={InstructionsCSS.listItem}>
+                                    Call Quick Sort with parameters:
+                                    <ul className={InstructionsCSS.list}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Sub-board: the entire sub-board.
+                                        </li>                   
+                                        <li className={InstructionsCSS.listItem}>
+                                            <p className={InstructionsCSS.textGreen}>Left</p>: 0.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            <p className={InstructionsCSS.textRed}>Right</p>: n - 1.
+                                        </li>
+                                    </ul>
+                                    <p className={InstructionsCSS.textGreen}>Left</p> and <p className={InstructionsCSS.textRed}>Right</p> denote the start and end of the sub-board we are working on respectively.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    Quick Sort works repeatedly like this. If <p className={InstructionsCSS.textGreen}>Left</p> {'<'} <p className={InstructionsCSS.textRed}>Right</p> then:
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                       <li className={InstructionsCSS.listItem}>
+                                            Call Partition with parameters:
+                                            <ul className={InstructionsCSS.list}>
+                                                <li className={Instructions.listItem}>
+                                                    Sub-board: the given sub-board.
+                                                </li>
+                                                <li className={Instructions.listItem}>
+                                                    <p className={InstructionsCSS.textGreen}>Left</p>: <p className={InstructionsCSS.textGreen}>Left</p>.
+                                                </li>
+                                                <li className={Instructions.listItem}>
+                                                    <p className={InstructionsCSS.textRed}>Right</p>: <p className={InstructionsCSS.textRed}>Right</p>.
+                                                </li>
+                                            </ul>
+                                            Save result to a variable named PI that is the index of the pivot.
+                                       </li>
+                                       <li className={InstructionsCSS.listItem}>
+                                            Call Quick Sort with parameters:
+                                            <ul className={InstructionsCSS.list}>
+                                                <li className={Instructions.listItem}>
+                                                    Sub-board: the given sub-board.
+                                                </li>
+                                                <li className={Instructions.listItem}>
+                                                    <p className={InstructionsCSS.textGreen}>Left</p>: <p className={InstructionsCSS.textGreen}>Left</p>.
+                                                </li>
+                                                <li className={Instructions.listItem}>
+                                                    <p className={InstructionsCSS.textRed}>Right</p>: PI - 1.
+                                                </li>
+                                            </ul>
+                                       </li>
+                                       <li className={InstructionsCSS.listItem}>
+                                            Call Quick Sort with parameters:
+                                            <ul className={InstructionsCSS.list}>
+                                                <li className={Instructions.listItem}>
+                                                    Sub-board: the given sub-board.
+                                                </li>
+                                                <li className={Instructions.listItem}>
+                                                    <p className={InstructionsCSS.textGreen}>Left</p>: PI + 1.
+                                                </li>
+                                                <li className={Instructions.listItem}>
+                                                    <p className={InstructionsCSS.textRed}>Right</p>: <p className={InstructionsCSS.textRed}>Right</p>.
+                                                </li>
+                                            </ul>
+                                       </li>
+                                    </ol>
+                                    When all recursive calls of Quick Sort end, then the entire board will be sorted <div className={InstructionsCSS.barPlaced}/>.
+                                </li>
+                                <li className={InstructionsCSS.listItem}>
+                                    It is obvious that each call of Quick Sort may call Partition function. Lets assume that: 
+                                    <ul className={InstructionsCSS.list}>
+                                        <li className={InstructionsCSS.listItem}>GB is the given sub-board.</li>
+                                    </ul>
+                                    Partition follows these steps:
+                                    <ol className={InstructionsCSS.listAlphabetical}>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Set pivot = GB[<p className={InstructionsCSS.textRed}>Right</p>].
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Initialize i = <p className={InstructionsCSS.textGreen}>Left</p> - 1.
+                                            Initialize j = <p className={InstructionsCSS.textGreen}>Left</p>.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Set pivot as prePlaced <div className={InstructionsCSS.barPrePlaced}/> because this is the bar that is going to be
+                                            placed <div className={InstructionsCSS.barPlaced}/> at the correct position in the sorted board.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            While j {'<'} <p className={InstructionsCSS.textRed}>Right</p> repeat:
+                                            <ol className={InstructionsCSS.listRoman}>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Set GB[j] as examining <div className={InstructionsCSS.barExamining}/> because we are going to check if GB[j] is shorter than pivot. 
+                                                    If GB[j] {'<'} pivot then:
+                                                    <ol className={InstructionsCSS.list}>
+                                                        <li className={InstructionsCSS.listItem}>
+                                                            Increment i.
+                                                        </li>
+                                                        <li className={InstructionsCSS.listItem}>
+                                                            Swap GB[i] with GB[j]. This is done because we want to put all bars that are shorter than pivot at its left side.
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                                <li className={InstructionsCSS.listItem}>
+                                                    Increment j.
+                                                </li>
+                                            </ol>
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Increment i.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Swap pivot with GB[i]. 
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Set the status of pivot as placed <div className={InstructionsCSS.barPlaced}/> because now pivot is put at its correct position. All the bars
+                                            that are shorter than pivot are at its left side, and all bars that are taller than pivot are at its right side.
+                                        </li>
+                                        <li className={InstructionsCSS.listItem}>
+                                            Return i.
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </p>
+                    </div>
+                </div>
+
             </section>
         </div>
     )

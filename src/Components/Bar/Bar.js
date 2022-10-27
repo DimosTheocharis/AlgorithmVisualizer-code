@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BarCSS from './Bar.module.css';
 
-function Bar({ bar, deleteBar, editBoard, showHeight }) {
+function Bar({ bar, deleteBar, editBoard, showHeight, showIndex }) {
     const [height, setHeight] = useState(bar.getValue());
     const resizableRef = useRef(null);
     const resizerRef = useRef(null);
@@ -68,7 +68,13 @@ function Bar({ bar, deleteBar, editBoard, showHeight }) {
                 :
                     null
             }
-            <p className={BarCSS.index}>{bar.getIndex()}</p>
+            {
+                showIndex
+                ?
+                    <p className={BarCSS.index}>{bar.getIndex()}</p>
+                :
+                    null
+            }
             {determineBarTools()}
         </div>
     )
