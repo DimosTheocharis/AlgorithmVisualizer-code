@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef,useEffect } from 'react';
 //importing components
 import Bar from '../../Components/Bar/Bar';
 import Slider from '../../Components/Slider/Slider';
@@ -14,7 +14,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import styles from './SortingTemplate.module.css';
 
 
-function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages, createBoard, savedBoards, setBoard, setIsDisabled, setSavedBoards}) {
+function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages, setBoard, setIsDisabled}) {
     const { handleLoadButton, setShowSelector, showSelector } = useContext(AppContext);
     const [barHeights, setBarHeights] = useState(null); //saves the heights of the bars. It's used when the user wants to reset the board to the previous state
     const [editBoard, setEditBoard] = useState(false); //whether or not the user wants to add/delete/resize a bar
@@ -24,7 +24,28 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     const [showHeight, setShowHeight] = useState(true);
     const [showIndex, setShowIndex] = useState(true);
     const [showSettings, setShowSettings] = useState(false);
+    const [savedBoards, setSavedBoards] = useState({}); //an object with all saved boards.
 
+
+    useEffect(() => {
+        //load saved boards
+        const boards = loadSavedBoards();
+        //create default boards
+        const firstRun = localStorage.getItem("firstRun"); //if null, the app is running for the first time in the users pc
+        if (firstRun === null) {
+            //heights of the default boards
+            const defaultBoardHeights = {"Default small": [120,70,90,50],
+                                         "Default medium": [150,278,106,229,61,181],
+                                         "Default big": [274,144,396,144,84,165,105,302,219,255,120,70,339,90,50]}
+            //for each array of heights, create the corresponding board
+            Object.keys(defaultBoardHeights).forEach(boardName => {
+                boards[boardName] = defaultBoardHeights[boardName];
+            })
+            localStorage.setItem("firstRun", false);
+            localStorage.setItem("savedBoards", JSON.stringify(boards));
+        }
+        setSavedBoards(boards);
+    }, [])
     
     const addBar = (index) => {
         let i;
@@ -37,6 +58,17 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
             newBoard[i].setIndex(newBoard[i].getIndex() + 1);
         }
         setBoard(newBoard);
+    }
+
+    const createBoard = (heights) => {
+        //takes an array of integers as parameter and creates the board with a bar for each height
+        const newBoard = [];
+        heights.forEach((height, index) => {
+            newBoard.push(
+                new BarNode(height, index)
+            );
+        })
+        return newBoard;
     }
 
 
@@ -82,7 +114,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     
     const getAddButtons = () => {
         //creates and returns a list with buttons that when clicked will create a vertical bar
-        if (board === null) return;
+        //if (board === null) return;
         const addButtons = [];
         let i;
         for (i = 0; i < board.length + 1; i++) {
@@ -118,7 +150,8 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
 
     const handleClearButton = () => {
         //this function is called when the user clicks the button Clear. It removes all bars from the board.
-        createBoard([]);
+        const newBoard = createBoard([]);
+        setBoard(newBoard);
         setSelectedBoardName("");
     }
 
@@ -128,7 +161,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         const newBoards = {...savedBoards};
         delete newBoards[boardName];
         setSavedBoards(newBoards);
-        localStorage.setItem("boards", JSON.stringify(newBoards));
+        localStorage.setItem("savedBoards", JSON.stringify(newBoards));
         setShowSelector(false);
     }
 
@@ -178,7 +211,8 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     const handleResetButton = () => {
         //resets the board to the previous state ie to the particular sequence of the bars before the start button got clicked
         algorithmState.current = "unbegun";
-        createBoard(barHeights);
+        const newBoard = createBoard(barHeights);
+        setBoard(newBoard);
         setIsDisabled({"editButton": false, "operationButton": false, "pauseButton": true, "resetButton": true, "saveButton": false, 
                        "shuffleButton": false, "slider": false});
     }
@@ -191,7 +225,8 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         //This function is called when the user selects a board name from the selector.
         setSelectedBoardName(boardName);
         const heights = savedBoards[boardName];
-        createBoard(heights);
+        const newBoard = createBoard(heights);
+        setBoard(newBoard);
         algorithmState.current = "unbegun";
         setShowSelector(false);
         setIsDisabled({
@@ -214,15 +249,20 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
             newBarHeights.push(extractedItem);
             i += 1;
         }
-        createBoard(newBarHeights);
+        const newBoard = createBoard(newBarHeights);
+        setBoard(newBoard);
         setSelectedBoardName("");
+    }
+
+    const loadSavedBoards = () => {
+        const boards = JSON.parse(localStorage.getItem("savedBoards"));
+        return boards === null ? {} : boards;
     }
 
     const saveBoard = () => {
         //this function gets called when the user clicks the arrow button after clicked the save button.
         //It saves an array with the heights of the board's bars to the localStorage
         const boardName = boardNameInputRef.current.value;
-        console.log(boardName);
         let boards;
         if (savedBoards === {}) {
             boards = {};

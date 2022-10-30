@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import SortingTemplate from '../../Templates/SortingTemplate/SortingTemplate';
 import BarNode from '../../Data Structures/BarNode';
 import { AppContext } from '../../App';
@@ -7,7 +7,6 @@ import { AppContext } from '../../App';
 function SelectionSort() {
     const { algorithmState, animationDuration, pause, sleep } = useContext(AppContext);
     const [board, setBoard] = useState(null); //saves the bars as objects
-    const [savedBoards, setSavedBoards] = useState(false);
     const [messages, setMessages] = useState(["No message yet."]); //the message that the algorithm will display at the panel
     const [isDisabled, setIsDisabled] = useState({ //whether or not some buttons are disabled 
         "clearButton": false,
@@ -19,32 +18,6 @@ function SelectionSort() {
         "shuffleButton": false,
         "slider": false    
     })
-    //unbegan if it has not started yet
-    //pending if algorithm is currently running
-    //finished if either algorithm either has normally ended, or manually stopped
-    
-    useEffect(() => {
-        //load saved boards
-        const boards = loadSavedBoards();
-        setSavedBoards(boards);
-
-        //create a default board
-        const customHeights = [120,70,90,50]; //70,120,80,50,60,50,70,50,200
-        createBoard(customHeights);
-        
-    },[])
-    
-    
-    const createBoard = (heights) => {
-        //takes an array of integers as parameter and creates the board with a bar for each height
-        const newBoard = [];
-        heights.forEach((height, index) => {
-            newBoard.push(
-                new BarNode(height, index)
-            );
-        })
-        setBoard(newBoard);
-    }
 
     const handleSortingTermination = () => {
         //this function is called when the algorithm ends or is stopped by the user
@@ -53,11 +26,6 @@ function SelectionSort() {
             return {...prev, "loadButton": false, "operationButton": true, "resetButton": false}
         })
     }
-
-    const loadSavedBoards = () => {
-        const boards = JSON.parse(localStorage.getItem("boards"));
-        return boards === null ? {} : boards;
-      }
 
     const performBoardChanges = (changes) => {
         const newBoard = [...board];
@@ -147,13 +115,10 @@ function SelectionSort() {
             algorithm={SelectionSortAlgorithm}
             algorithmState={algorithmState}
             board={board}
-            createBoard={createBoard}
             isDisabled={isDisabled}
             messages={messages}
-            savedBoards={savedBoards}
             setBoard={setBoard}
             setIsDisabled={setIsDisabled}
-            setSavedBoards={setSavedBoards}
         />
     )
 }

@@ -1,12 +1,11 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import SortingTemplate from '../../Templates/SortingTemplate/SortingTemplate';
 import BarNode from '../../Data Structures/BarNode';
 import { AppContext } from '../../App';
 
 function MergeSort() {
-    const { animationDuration, sleep } = useContext(AppContext);
+    const { algorithmState, animationDuration, sleep } = useContext(AppContext);
     const [board, setBoard] = useState(null); //saves the bars as objects
-    const [savedBoards, setSavedBoards] = useState(false);
     const [messages, setMessages] = useState(["No message yet."]); //the messages that the algorithm will display at the panel
     const [isDisabled, setIsDisabled] = useState({ //whether or not some buttons are disabled 
         "clearButton": false,
@@ -18,34 +17,7 @@ function MergeSort() {
         "shuffleButton": false,
         "slider": false    
     })
-    let algorithmState = useRef("unbegun"); //a mutable value that tells the holds the state of the algorithm. 
-    //unbegan if it has not started yet
-    //pending if algorithm is currently running
-    //finished if either algorithm either has normally ended, or manually stopped
-
-    useEffect(() => {
-        //load saved boards
-        const boards = loadSavedBoards();
-        setSavedBoards(boards);
-
-        //create a default board
-        const customHeights = [120,70,90,50]; //70,120,80,50,60,50,70,50,200
-        createBoard(customHeights);
-        
-    },[])
     
-    
-    const createBoard = (heights) => {
-        //takes an array of integers as parameter and creates the board with a bar for each height
-        const newBoard = [];
-        heights.forEach((height, index) => {
-            newBoard.push(
-                new BarNode(height, index)
-            );
-        })
-        setBoard(newBoard);
-    }
-
     const extractHeights = (board) => {
         //this function creates and return an array of the heights of the bars. The result is saved at the variable barHeights
         const heights = [];
@@ -62,11 +34,6 @@ function MergeSort() {
         setIsDisabled(prev => {
             return {...prev, "loadButton": false, "operationButton": true, "resetButton": false}
         })
-    }
-
-    const loadSavedBoards = () => {
-        const boards = JSON.parse(localStorage.getItem("boards"));
-        return boards === null ? {} : boards;
     }
 
     const performBoardChanges = (changes) => {
@@ -313,13 +280,10 @@ function MergeSort() {
             algorithm={() => {mergeSortAlgorithm(extractHeights(board), 0, board.length - 1)}}
             algorithmState={algorithmState}
             board={board}
-            createBoard={createBoard}
             isDisabled={isDisabled}
             messages={messages}
-            savedBoards={savedBoards}
             setBoard={setBoard}
             setIsDisabled={setIsDisabled}
-            setSavedBoards={setSavedBoards}
         />
     )
 }
