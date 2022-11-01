@@ -15,25 +15,32 @@ function Instructions() {
                         <h3 className={InstructionsCSS.pieceTitle}>General</h3>
                         <p className={InstructionsCSS.pieceText}>
                             <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Algorithm's Visualizer</p> is an app that shows how the algorithms work.
-                            At the current time the app visualizes 2 path-finding algorithms: <p className={InstructionsCSS.textItalic}>A*(Asterisk)</p> and <p className={InstructionsCSS.textItalic}>Dijkstra</p>.
+                            At the current time the app visualizes 2 path-finding algorithms: <p className={InstructionsCSS.textItalic}>A*(Asterisk), Dijkstra</p> and 
+                            5 sorting algorithms: <p className={InstructionsCSS.textItalic}>Bubble Sort, Selection Sort, Insertion Sort, Merge Sort</p> and <p className={InstructionsCSS.textItalic}>Quick Sort</p>.
                             It is consisted of 4 screens: 2 screens for the algorithms, one used to compare them, and the current screen. The algorithms run with the most efficient way:
                             they use appropriate data structures like Priority Queue implemented as min heap, and AVL tree. The goal of this app is to implement the knowledge i learnt about
-                            data structures and algorithms from a course at univercity.
+                            data structures and algorithms from a course at university.
                         </p>
                     </div>
 
                     <div className={InstructionsCSS.sectionContentPiece}>
-                        <h3 className={InstructionsCSS.pieceTitle}>Functionality</h3>
+                        <h3 className={InstructionsCSS.pieceTitle}>How to use</h3>
                         <p className={InstructionsCSS.pieceText}>
                             Both path-finding algorithms work in the same way. First, you click a cell where you want to place the source-cell <div className={InstructionsCSS.blockSource}/>.
                             After that, you place the destination-cell <div className={InstructionsCSS.blockDestination}/>. Eventually, you may put some cells that represent obstacles <div className={InstructionsCSS.blockBlocked}/> which 
                             the path <div className={InstructionsCSS.blockPath}/> can't reach. When you are done, click Start and the algorithm will start running. You can always click Pause to think about the next move of the algorithm
                             by yourself. Also, it is possible to adjust the speed of the algorithm, ie how fast it runs, with the slider between the buttons.
                         </p>
-                        <br/>
                         <p className={InstructionsCSS.pieceText}>
                             The app supports a load/save system. You can draw a grid that consists of source, destination and obstacles and then save it with a custom name 
                             so as to use it for future needs, or at different algorithm.
+                        </p>
+                        <br/>
+                        <p className={InstructionsCSS.pieceText}>
+                            All sorting algorithms run on a board that has bars. The bars represent the values you want to sort. For example, if you want to sort an array with the values [40,20,60,55] you have
+                            to add bars with heights: 40, 20, 60, 55 in the board. You can add bars in the board by clicking Edit button and then the add-buttons. You can also resize the bars 
+                            to achieve the desired board. When you are ready, just click Start. Lastly, you may determine the duration of each step by the slider, and click Pause button whenether you want 
+                            to take some time to think the next step of the algorithm by yourself.
                         </p>
 
                     </div>

@@ -13,6 +13,9 @@ import { BsFillArrowRightSquareFill } from "react-icons/bs";
 import { IoSettingsOutline } from "react-icons/io5";
 import styles from './SortingTemplate.module.css';
 
+//Sorting template is nothing but repeated code that is used in every sorting algorithm. Every sorting algorithm renders this component 
+//with suitable information like the algorithm. 
+
 
 function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages, setBoard, setIsDisabled}) {
     const { handleLoadButton, setShowSelector, showSelector } = useContext(AppContext);
