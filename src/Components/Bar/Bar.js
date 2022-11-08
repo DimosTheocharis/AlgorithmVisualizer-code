@@ -24,7 +24,13 @@ function Bar({ bar, deleteBar, editBoard, showHeight, showIndex }) {
         }
 
         const onMouseMoveResizer = (event) => {
-            const dy = y - event.clientY;
+            //the board that contains bars has been defined in a way that its height is 70% of the whole container which is 100vh - 60px for navbar
+            //so we cant let the bar exceed the height of the board
+            let dy = y - event.clientY;
+            if (height + dy > (window.innerHeight - 60) * 0.7) {
+                height = Math.floor((window.innerHeight - 60) * 0.7) - 10;
+                //we subtract 8px. 5px for the border of the board, and 3px for the border of the bar
+            }
             height = height + dy;
             bar.setValue(height);
             setHeight(height);

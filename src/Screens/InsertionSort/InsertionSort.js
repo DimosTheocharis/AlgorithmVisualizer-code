@@ -6,7 +6,7 @@ import { AppContext } from '../../App';
 
 function InsertionSort() {
     const { algorithmState, animationDuration, pause, sleep } = useContext(AppContext);
-    const [board, setBoard] = useState(null); //saves the bars as objects
+    const [board, setBoard] = useState([]); //saves the bars as objects
     const [messages, setMessages] = useState(["No message yet."]);
     const [isDisabled, setIsDisabled] = useState({ //whether or not some buttons are disabled 
         "clearButton": false,

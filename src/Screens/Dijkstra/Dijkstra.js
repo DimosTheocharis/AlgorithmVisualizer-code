@@ -15,8 +15,9 @@ import styles from './Dijkstra.module.css';
 function Dijkstra() {
     const {rows, columns, algorithmState, animationDuration, calculateDistance, computeNeighbours, destination, disabled, durationInterval, 
            getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids,nextBlock, pause, 
-           performGridChanges, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
-           setSavedGrids, setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
+           performGridChanges, resetData, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, 
+           setIsDisabled, setNextBlock, setSavedGrids, setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, 
+           source, takeSnapshot, visualizePath} = useContext(AppContext);
     const [showSettings, setShowSettings] = useState(false);
     const [showValueD, setShowValueD] = useState(false);
     const [duration, setDuration] = useState(0); //the running time of the algorithm
@@ -25,6 +26,8 @@ function Dijkstra() {
         const grids = loadSavedGrids();
         setSavedGrids(grids);  
         createGrid();
+        resetData();
+        handleResetButton();
         setIsDisabled(prev => ({...prev, "snapshotButton": true}));
     }, []);
     

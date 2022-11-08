@@ -5,7 +5,7 @@ import { AppContext } from '../../App';
 
 function MergeSort() {
     const { algorithmState, animationDuration, sleep } = useContext(AppContext);
-    const [board, setBoard] = useState(null); //saves the bars as objects
+    const [board, setBoard] = useState([]); //saves the bars as objects
     const [messages, setMessages] = useState(["No message yet."]); //the messages that the algorithm will display at the panel
     const [isDisabled, setIsDisabled] = useState({ //whether or not some buttons are disabled 
         "clearButton": false,

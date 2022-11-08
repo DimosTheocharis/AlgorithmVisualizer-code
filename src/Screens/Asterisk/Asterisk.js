@@ -15,8 +15,8 @@ import styles from './Asterisk.module.css';
 
 function Asterisk() {
   const { algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, durationInterval, getStatus, 
-          grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, nextBlock, pause, performGridChanges, rows, 
-          savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
+          grid, gridNameInputRef, handleLoadButton, handleSaveButton, isDisabled, loadSavedGrids, nextBlock, pause, performGridChanges, resetData, 
+          rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, setGrid, setIsDisabled, setNextBlock, 
           setSavedGrids, setSelectedGridName, setShowSelector, setSource, showGridInput, showSelector, sleep, source, takeSnapshot, visualizePath} = useContext(AppContext);
   const [showSettings, setShowSettings] = useState(false);
   //the next 3 values are for the nodes of the algorithm. 
@@ -29,6 +29,8 @@ function Asterisk() {
     const grids = loadSavedGrids();
     setSavedGrids(grids);
     createGrid();
+    resetData();
+    handleResetButton();
     setIsDisabled(prev => ({...prev, "snapshotButton": true}));
   }, [])
 

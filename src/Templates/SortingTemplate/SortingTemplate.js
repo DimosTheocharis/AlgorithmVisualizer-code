@@ -33,9 +33,11 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     useEffect(() => {
         //load saved boards
         const boards = loadSavedBoards();
+        console.log(boards);
         //create default boards
         const firstRun = localStorage.getItem("firstRun"); //if null, the app is running for the first time in the users pc
         if (firstRun === null) {
+            console.log("mpainw")
             //heights of the default boards
             const defaultBoardHeights = {"Default small": [120,70,90,50],
                                          "Default medium": [150,278,106,229,61,181],
@@ -51,6 +53,8 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
     }, [])
     
     const addBar = (index) => {
+        //we want to have maximum 15 bars at the board
+        if (board.length == 15) return;
         let i;
         const newBoard = [...board];
         //The height of the new bar will be the value of the previous bar (at the left) or the value of the first of index is 0
@@ -120,6 +124,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         //if (board === null) return;
         const addButtons = [];
         let i;
+        console.log(board);
         for (i = 0; i < board.length + 1; i++) {
             addButtons.push(
                 <AddBarButton 
@@ -259,7 +264,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
 
     const loadSavedBoards = () => {
         const boards = JSON.parse(localStorage.getItem("savedBoards"));
-        return boards === null ? {} : boards;
+        return boards === null ? [] : boards;
     }
 
     const saveBoard = () => {
@@ -279,7 +284,7 @@ function SortingTemplate({algorithm, algorithmState, board, isDisabled, messages
         }
         boards[boardName] = extractHeights(board); 
         setSavedBoards(boards);
-        localStorage.setItem("boards", JSON.stringify(boards));
+        localStorage.setItem("savedBoards", JSON.stringify(boards));
         setShowBoardInput(false);
     }
 

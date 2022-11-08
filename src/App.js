@@ -20,7 +20,7 @@ const columns = 20;
 export const AppContext = createContext(); //create a context to easily pass values to child elements
 
 function App() {
-  const [displayedScreen, setDisplayedScreen] = useState("Asterisk");
+  const [displayedScreen, setDisplayedScreen] = useState("Instructions");
   const [grid, setGrid] = useState(null); //the grid of nodes that will be used in the algorithms
   const [animationDuration, setAnimationDuration] = useState(0); //how fast the algorithm will run
   const [nextBlock, setNextBlock] = useState("source"); //determines what the next block is going to be
@@ -125,7 +125,6 @@ function App() {
   }
 
 
-
   const min = (value1, value2) => {
     return value1 < value2 ? value1 : value2;
   }
@@ -149,6 +148,11 @@ function App() {
       newGrid[change.row][change.column].setStatus(change.status);
     })
     setGrid(newGrid);
+  }
+
+  const resetData = () => {
+    setNextBlock("source");
+    
   }
 
 
@@ -240,12 +244,13 @@ function App() {
   return (
     <AppContext.Provider value={{ algorithmState, animationDuration, calculateDistance, columns, computeNeighbours, destination, disabled, 
       durationInterval, getStatus, grid, gridNameInputRef, handleLoadButton, handleSaveButton, handleSlider, isDisabled, loadSavedGrids, 
-      nextBlock, pause, performGridChanges, rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, setDisabled, 
-      setGrid, setIsDisabled, setNextBlock, setSavedGrids, setSelectedGridName, setShowGridInput, setShowSelector, setSnapshots, setSource, 
-      showGridInput, showSelector, snapshots, sleep, source, takeSnapshot, visualizePath}}>
+      nextBlock, pause, performGridChanges, resetData, rows, savedGrids, saveGrid, selectedGridName, setAnimationDuration, setDestination, 
+      setDisabled, setGrid, setIsDisabled, setNextBlock, setSavedGrids, setSelectedGridName, setShowGridInput, setShowSelector, setSnapshots, 
+      setSource, showGridInput, showSelector, snapshots, sleep, source, takeSnapshot, visualizePath}}>
       <NavBar displayedScreen={displayedScreen} setDisplayedScreen={setDisplayedScreen}/>
       <Routes>
-        <Route exact path="/asterisk" element={<Asterisk/>}/>
+        <Route exact path="/" element={<Instructions/>}/>
+        <Route path="/asterisk" element={<Asterisk/>}/>
         <Route path="/dijkstra" element={<Dijkstra/>}/>
         <Route path="/comparison" element={<Comparison/>}/>
         <Route path="/bubblesort" element={<BubbleSort/>}/>
@@ -253,8 +258,7 @@ function App() {
         <Route path="/insertionsort" element={<InsertionSort/>}/>
         <Route path="/mergesort" element={<MergeSort/>}/>
         <Route path="/quicksort" element={<QuickSort/>}/>
-        <Route path="/instructions" element={<Instructions/>}/>
-        <Route path="*" element={<Asterisk/>}/>
+        <Route path="*" element={<Instructions/>}/>
       </Routes>
     </AppContext.Provider>
   );
