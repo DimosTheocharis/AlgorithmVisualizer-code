@@ -35,6 +35,10 @@ function Instructions() {
                             The app supports a load/save system. You can draw a grid that consists of source, destination and obstacles and then save it with a custom name 
                             so as to use it for future needs, or at different algorithm.
                         </p>
+                        <p className={InstructionsCSS.pieceText}>
+                            For the grid, every node is 10 units away from the nodes at its top, bottom, left and right side. 
+                            Also, every node is 14 units away from its diagonal nodes.
+                        </p>
                         <br/>
                         <p className={InstructionsCSS.pieceText}>
                             All sorting algorithms run on a board that has bars. The bars represent the values you want to sort. For example, if you want to sort an array with the values [40,20,60,55] you have
@@ -152,33 +156,38 @@ function Instructions() {
                         <p className={InstructionsCSS.pieceText}>
                             Like <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Asterisk</p>, <p className={`${InstructionsCSS.textMedium} ${InstructionsCSS.textItalic}`}>Dijkstra</p> is 
                             a path-finding algorithm. Every node has a property named value-d which is an estimation of the actual distance between this node and the source node <div className={InstructionsCSS.blockSource}/>. 
-                            For every node v it is true that v.valueD {">="} distance(source node, v) and only when the node v becomes evaluated <div className={InstructionsCSS.blockEvaluated}/> will they be equal.
+                            For every node v it is true that v.value-d {">="} distance(source node, v) and only when the node v becomes evaluated <div className={InstructionsCSS.blockEvaluated}/> will they be equal.
                         </p>
                     </div>
 
                     <div className={InstructionsCSS.sectionContentPiece}>
                         <h3 className={InstructionsCSS.pieceTitle}>Algorithm</h3>
                         <p className={InstructionsCSS.pieceText}>
-                            The idea is that we have a set S which keeps track of the nodes included at the shortest path <div className={InstructionsCSS.blockPath}/> between the source node <div className={InstructionsCSS.blockSource}/> and the destination
+                            The idea is that we have a set <p className={InstructionsCSS.textOrange}>S</p> which keeps track of 
+                            the nodes included at the shortest path <div className={InstructionsCSS.blockPath}/> between the source 
+                            node <div className={InstructionsCSS.blockSource}/> and the destination
                             node <div className={InstructionsCSS.blockDestination}/>. The algorithm follows these steps:
                             <ol className={InstructionsCSS.list}>
                                 <li className={InstructionsCSS.listItem}>
-                                    Initialize the set S as empty. The nodes inside S are the ones whose minimum distance from the source is calculated and finalized.
+                                    Initialize the set S as empty. The nodes inside <p className={InstructionsCSS.textOrange}>S</p> are
+                                    the ones whose minimum distance from the source is calculated and finalized.
                                 </li>
                                 <li className={InstructionsCSS.listItem}>
                                     Set infinite as the value-d of all vertices except the source node <div className={InstructionsCSS.blockSource}/> which should be 0.
                                 </li>   
                                 <li className={InstructionsCSS.listItem}>
-                                    While the destination source <div className={InstructionsCSS.blockDestination}/> has not been found:
+                                    While the destination node <div className={InstructionsCSS.blockDestination}/> has not been found:
                                     <ol className={InstructionsCSS.listAlphabetical}>
                                         <li className={InstructionsCSS.listItem}>
-                                            Pick a vertex u which is not there in S and has a minimum value-d.
+                                            Pick a vertex <p className={InstructionsCSS.textGreen}>u</p> which 
+                                            is not contained inside <p className={InstructionsCSS.textOrange}>S</p> and
+                                            has the smallest value-d.
                                         </li>
                                         <li className={InstructionsCSS.listItem}>
-                                            Insert u into S.
+                                            Insert <p className={InstructionsCSS.textGreen}>u</p> into <p className={InstructionsCSS.textOrange}>S</p>.
                                         </li>
                                         <li className={InstructionsCSS.listItem}>
-                                            Generate u's 8 successors.
+                                            Generate <p className={InstructionsCSS.textGreen}>u</p>'s 8 successors (neighbors).
                                         </li>
                                         <li className={InstructionsCSS.listItem}>
                                             For every sussessor that is neither obstacle <div className={InstructionsCSS.blockBlocked}/> nor evaluated node <div className={InstructionsCSS.blockEvaluated}/>:
@@ -187,8 +196,12 @@ function Instructions() {
                                                     Mark the node as evaluating <div className={InstructionsCSS.blockEvaluating}/> (it is going to be evaluted).
                                                 </li>
                                                 <li className={InstructionsCSS.listItem}>
-                                                    For every sussessor v, if the sum of u.valueD and distance(u, v), 
-                                                    is less than the value-d of v, then update the value-d of v and set u as the parent of v.
+                                                    For every sussessor <p className={InstructionsCSS.textRed}>v</p>, 
+                                                    if <p className={InstructionsCSS.textGreen}>u</p>.value-d + 
+                                                    distance(<p className={InstructionsCSS.textGreen}>u</p>, 
+                                                    <p className={InstructionsCSS.textRed}>v</p>) {"<"} <p className={InstructionsCSS.textRed}>v</p>.value-d, 
+                                                    then set <p className={InstructionsCSS.textRed}>v</p>.value-d = <p className={InstructionsCSS.textGreen}>u</p>.value-d + distance(<p className={InstructionsCSS.textGreen}>u</p>, <p className={InstructionsCSS.textRed}>v</p>)
+                                                    and set <p className={InstructionsCSS.textRed}>v</p>.parent = <p className={InstructionsCSS.textGreen}>u</p>.
                                                 </li>
                                             </ol>
                                         </li>
@@ -208,11 +221,14 @@ function Instructions() {
                         <p className={InstructionsCSS.pieceText}>
                             <ol className={InstructionsCSS.list}>
                                 <li className={InstructionsCSS.listItem}>
-                                    The set S can be represented in many ways. In my code, i set a property "status" for every node, and the ones that have status="evaluated"
-                                    form the set S.
+                                    The set <p className={InstructionsCSS.textOrange}>S</p> can be represented in many 
+                                    ways. In my code, i set a property "status" for every node, and the ones that have 
+                                    status="evaluated" form the set <p className={InstructionsCSS.textOrange}>S</p>.
                                 </li>
                                 <li className={InstructionsCSS}>
-                                    The selection of the node with the minimun value-d (step 3a) can be done by inserting all nodes that are going to be evaluating <div className={InstructionsCSS.blockEvaluating}/> to
+                                    The selection of the node with the minimun value-d (step 3a) can be done by 
+                                    inserting all nodes that are going to be 
+                                    evaluating <div className={InstructionsCSS.blockEvaluating}/> to
                                     a Priority Queue implemented as min heap and use the extract-min method.
                                 </li>
                             </ol>
