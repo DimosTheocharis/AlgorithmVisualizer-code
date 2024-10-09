@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/DimosTheocharis/AlgorithmVisualizer-code/static/css/main.5309a857.css",
+    "main.js": "/DimosTheocharis/AlgorithmVisualizer-code/static/js/main.2e33249e.js",
+    "index.html": "/DimosTheocharis/AlgorithmVisualizer-code/index.html",
+    "main.5309a857.css.map": "/DimosTheocharis/AlgorithmVisualizer-code/static/css/main.5309a857.css.map",
+    "main.2e33249e.js.map": "/DimosTheocharis/AlgorithmVisualizer-code/static/js/main.2e33249e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5309a857.css",
+    "static/js/main.2e33249e.js"
+  ]
+}
