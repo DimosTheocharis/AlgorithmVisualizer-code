@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/DimosTheocharis/AlgorithmVisualizer-code/static/css/main.5309a857.css",
-    "main.js": "/DimosTheocharis/AlgorithmVisualizer-code/static/js/main.0f2a020b.js",
-    "index.html": "/DimosTheocharis/AlgorithmVisualizer-code/index.html",
-    "main.5309a857.css.map": "/DimosTheocharis/AlgorithmVisualizer-code/static/css/main.5309a857.css.map",
-    "main.0f2a020b.js.map": "/DimosTheocharis/AlgorithmVisualizer-code/static/js/main.0f2a020b.js.map"
+    "main.css": "/AlgorithmVisualizer-code/static/css/main.5309a857.css",
+    "main.js": "/AlgorithmVisualizer-code/static/js/main.0f2a020b.js",
+    "index.html": "/AlgorithmVisualizer-code/index.html",
+    "main.5309a857.css.map": "/AlgorithmVisualizer-code/static/css/main.5309a857.css.map",
+    "main.0f2a020b.js.map": "/AlgorithmVisualizer-code/static/js/main.0f2a020b.js.map"
   },
   "entrypoints": [
     "static/css/main.5309a857.css",
